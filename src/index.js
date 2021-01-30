@@ -37,8 +37,8 @@ var SUMCOL = function(instance, columnId) {
 var SUMROWMUL = function(instance, rowId, rowId2, startCol) {
     var total = 0;
     for (var j = startCol; j < instance.records[rowId].length; j++) {
-        if (Number(instance.records[rowId][j].innerHTML) && Number(instance.records[rowId2][j].innerHTML)) {
-            total += Number(instance.records[rowId][j].innerHTML) * Number(instance.records[rowId2][j].innerHTML);
+        if (Number(instance.getValueFromCoords(j, rowId)) && Number(instance.getValueFromCoords(j, rowId2))) {
+            total += Number(instance.getValueFromCoords(j, rowId)) * Number(instance.getValueFromCoords(j, rowId2));
         }
     }
     return total;
