@@ -1,0 +1,16 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 6,
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "comma-spacing": "error",
+        "indent": ["error", 4],
+        "key-spacing": "error",
+        no-trailing-spaces: "error",
+        space-in-parens: ["error", "never"],
+        func-call-spacing: ["error", "never"],
+        "space-infix-ops": ["error", { "int32Hint": true }],
+        semi: ["error", "always"],
+    }
+}
