@@ -57,6 +57,10 @@ var project_count = 2;
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data:data,
     minSpareRows: SPARE_COLUMNS,
+    columnSorting:false,
+    allowInsertColumn: false, // TODO: This needs to be enabled to add new columns later. Instead remove option from context menu.
+    allowManualInsertColumn: false,
+    allowDeleteColumn: false,
     columns: [
         { type: 'dropdown', title:'Part Category', width:120, source: part_categorys },
         { type: 'text', title:'Value', width:100,  },
@@ -77,6 +81,9 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             cell.classList.remove('jexcel_dropdown');
             cell.innerHTML = c == FIRST_PROJECT_COL - 1 ? 'Count:' : '';
             cell.style.backgroundColor = '#f3f3f3';
+        }
+        if (r== 0 && c>= FIRST_PROJECT_COL) {
+            cell.innerHTML
         }
         if (r > 0 && c == PER_PART_COST_SUM_COL  && !instance.jexcel.getValue(id)) {
             if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
