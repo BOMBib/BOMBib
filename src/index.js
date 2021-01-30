@@ -49,6 +49,14 @@ var PART_COUNT_COLUMN = 4;
 var PER_PART_COST_SUM_COL = 5;
 var FIRST_PROJECT_COL = 6;
 
+function addDependency(instance, cell, dependson) {
+    if (dependson in instance.jexcel.formula) {
+        instance.jexcel.formula[dependson].push(cell);
+    } else {
+        instance.jexcel.formula[dependson] = [cell];
+    }
+}
+
 var project_count = 2;
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
@@ -97,8 +105,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
                 for (let j = 0; j < project_count; j++) {
                     let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-                    instance.jexcel.formula[jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1)] = [cellName];
-                    instance.jexcel.formula[jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1"] = [cellName];
+                    addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
+                    addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
                 }
             }
             cell.style.backgroundColor = '#f3f3f3';
