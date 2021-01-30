@@ -90,7 +90,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 instance.jexcel.setValue(id, '=D' + (r+1) + ' * E' + (r+1), true);
             }
             cell.style.backgroundColor = '#f3f3f3';
-            //cell.classList.add('readonly');
+            cell.classList.add('readonly');
         }
         if (r > 0 && c == PART_COUNT_COLUMN && !value) {
             if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
@@ -103,7 +103,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 }
             }
             cell.style.backgroundColor = '#f3f3f3';
-            //cell.classList.add('readonly');
+            cell.classList.add('readonly');
         }
     },
 });
