@@ -83,7 +83,9 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             cell.style.backgroundColor = '#f3f3f3';
         }
         if (r== 0 && c>= FIRST_PROJECT_COL) {
-            cell.innerHTML
+            if (cell.innerText > 0) {
+                cell.innerHTML = cell.innerText + 'x';
+            }
         }
         if (r > 0 && c == PER_PART_COST_SUM_COL  && !instance.jexcel.getValue(id)) {
             if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
