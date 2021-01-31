@@ -131,3 +131,19 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
 
 
 jexceltable.setComments(jexcel.getColumnName(FIRST_PROJECT_COL + 1) + '2', 'This is a comment for the resistor in Project 2');
+
+var initializedAddProjectModal = false;
+document.getElementById('addProjectModal').addEventListener('show.bs.modal', function () {
+    if (!initializedAddProjectModal) {
+        initializedAddProjectModal = true;
+        let tagdiv = document.getElementById('addProjectModalTagsDiv');
+        let nodes = document.createDocumentFragment();
+        config.projecttags.map(function (tag) {
+            let node = document.createElement('div');
+            node.className = 'form-check';
+            node.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="addProjectModalTagCheck' + tag + '"><label class="form-check-label" for="addProjectModalTagCheck' + tag + '"> ' + tag + '</label>';
+            nodes.appendChild(node);
+        });
+        tagdiv.replaceChildren(nodes);
+    }
+});

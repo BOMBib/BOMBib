@@ -36,27 +36,48 @@
             </ul>
         </div>
         <div class="container-fluid">
-            <div class="text-end"><button class="btn btn-primary" id="button-add-project" data-bs-toggle="modal" data-bs-target="#addProjectModal"><i class="bi bi-plus-square-fill align-text-bottom"></i> Add project</button></div>
+            <div class="text-end"><button class="btn btn-primary" id="addProjectButton" data-bs-toggle="modal" data-bs-target="#addProjectModal"><i class="bi bi-plus-square-fill align-text-bottom"></i> Add project</button></div>
             <div  id="spreadsheet"></div>
         </div>
-        <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addProjectModalLabel">Add projects</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="list-group">
-
-                  </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Add Projects</button>
-              </div>
+        <div class="modal fade" id="addProjectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProjectModalLabel">Add projects</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="searchProjectInput" placeholder="...">
+                                    <label for="searchProjectInput">Search</label>
+                                </div>
+                            </div>
+                            <div class="list-group col-lg-2" id="projectTagSelectGroup">
+                                <legend>Tags</legend>
+                                <div id="addProjectModalTagsDiv">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="list-group col-lg-10">
+                                <legend>Projects</legend>
+                                <div class="list-group-item"><div class="d-flex justify-content-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add Projects</button>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
