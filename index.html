@@ -54,7 +54,7 @@
                                     <label for="searchProjectInput">Search</label>
                                 </div>
                             </div>
-                            <div class="list-group col-lg-2" id="projectTagSelectGroup">
+                            <div class="col-lg-2">
                                 <legend>Tags</legend>
                                 <div id="addProjectModalTagsDiv">
                                     <div class="spinner-border" role="status">
@@ -62,12 +62,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="list-group col-lg-10">
+                            <div class="col-lg-10">
                                 <legend>Projects</legend>
-                                <div class="list-group-item"><div class="d-flex justify-content-center">
-                                    <div class="spinner-border" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div></div>
+                                <div class="list-group" id="projectListGroup">
+                                    <div class="list-group-item"><div class="d-flex justify-content-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div></div>
+                                    </div>
+                                    <template id="projectListGroupItemTemplate">
+                                        <div class="list-group-item list-group-item-action">
+                                            <div class="d-flex w-100 justify-content-between">
+                                                <h5 class="mb-1 projecttitle"></h5>
+                                            </div>
+                                            <small class="text-muted projectauthor me-3" title="Author"></small><small class="text-muted projectcommitter me-3" title="Committer"></small>
+                                            <span class="projecttags"></span>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>

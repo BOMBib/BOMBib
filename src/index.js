@@ -132,10 +132,30 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
 
 jexceltable.setComments(jexcel.getColumnName(FIRST_PROJECT_COL + 1) + '2', 'This is a comment for the resistor in Project 2');
 
+//FROM https://stackoverflow.com/a/35970894/2256700
+var getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+        var status = xhr.status;
+        if (status === 200) {
+            callback(null, xhr.response);
+        } else {
+            callback(status, xhr.response);
+        }
+    };
+    xhr.send();
+};
+
+
+
 var initializedAddProjectModal = false;
+
 document.getElementById('addProjectModal').addEventListener('show.bs.modal', function () {
     if (!initializedAddProjectModal) {
         initializedAddProjectModal = true;
+        getJSON('./projects/library.json', load_library);
         let tagdiv = document.getElementById('addProjectModalTagsDiv');
         let nodes = document.createDocumentFragment();
         config.projecttags.map(function (tag) {
@@ -147,3 +167,47 @@ document.getElementById('addProjectModal').addEventListener('show.bs.modal', fun
         tagdiv.replaceChildren(nodes);
     }
 });
+
+var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
+
+var library = [];
+function parse_library(p) {
+    p.tags = new Map();
+    for (const match of p.title.matchAll(tagRegex)) {
+        p.tags.set(match[1], true);
+    }
+    p.title = p.title.replace(tagRegex, '');
+    return p;
+}
+if (!('content' in document.createElement('template'))) {
+    alert("Your browser does not support the necessary feature, Sorry.");
+}
+
+function load_library(err, data) {
+    let listGroup = document.getElementById('projectListGroup');
+    if (err) {
+        listGroup.replaceChildren('<div class="list-group-item">An error occured</div>');
+        return;
+    }
+    let nodes = document.createDocumentFragment();
+    let template = document.getElementById('projectListGroupItemTemplate');
+    let titleNode = template.content.querySelector('.projecttitle');
+    let authorNode = template.content.querySelector('.projectauthor');
+    let committerNode = template.content.querySelector('.projectcommitter');
+    let tagsNode = template.content.querySelector('.projecttags');
+    data.forEach(function (p) {
+        let project = parse_library(p);
+        library.push(project);
+        console.log(project.title);
+
+        titleNode.innerText = project.title;
+        authorNode.innerText = project.author ? project.author.name : '';
+        committerNode.innerText = '(' + project.committer.name + ')';
+        tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
+            return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
+        }).join('');
+        console.log(tagsNode.innerHTML);
+        nodes.appendChild(document.importNode(template.content, true));
+    });
+    listGroup.replaceChildren(nodes);
+}
