@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* global jexcel */
+/* global jexcel, config */
 
 var data = [
     ['', '', '', '', '', '', 1, 2],
@@ -8,25 +8,7 @@ var data = [
     ['Potentiometer', '100k', 'Stereo Linear', '1.5', '', '', 2, 0],
 ];
 
-var part_categorys = [
-    'Resistor',
-    'Capacitor',
-    'Potentiometer',
-    'Diode',
-    'IC',
-    '',
-];
-
-var spec_autocompletes = {
-    'Potentiometer': ['Mono', 'Stereo', 'Linear', 'Logarithmic'],
-    'Resistor': ['Matched'],
-};
-var spec_all_autocompletes = Object.values(spec_autocompletes).flat();
-
-var dropdownFilter = function (instance, cell, c, r, source) {
-    var value = instance.jexcel.getValueFromCoords(0, r);
-    return spec_autocompletes[value] || source;
-};
+let part_categorys = [''].concat(config.categorys);
 
 /* exported SUMCOL */
 var SUMCOL = function(instance, columnId) {
