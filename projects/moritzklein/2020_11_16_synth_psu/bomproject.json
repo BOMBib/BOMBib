@@ -1,0 +1,60 @@
+{
+    "title": "DIY SYNTH PSU: How to build a simple dual power supply [PSU][-12,0,12V][Video]",
+    "description": "",
+    "author": {
+        "name": "Moritz Klein"
+    },
+    "committer": {
+        "name": "MaPePeR",
+        "github": "MaPePeR"
+    },
+    "links": {
+        "YouTube-Video": "https://www.youtube.com/watch?v=pQKN30Mzi2g"
+    },
+    "bom": [
+        {
+            "type": "Capacitor",
+            "value": "1uF",
+            "spec": "ceramic (or tantalum)",
+            "qty": 4
+        },
+        {
+            "type": "Capacitor",
+            "value": "4700uF",
+            "spec": "electrolytic, rated>35V",
+            "qty": 6
+        },
+        {
+            "type": "Diode",
+            "value": "1N4007",
+            "spec": "rectifier diode",
+            "qty": 3
+        },
+        {
+            "spec": "voltage regulator",
+            "value": "7812",
+            "qty": 1
+        },
+        {
+            "spec": "voltage regulator",
+            "value": "7912",
+            "qty": 1
+        },
+        {
+            "spec": "matching heatsinks (+ screws/nuts)",
+            "qty": 2
+        },
+        {
+            "spec": "thermal paste",
+            "qty": 1
+        },
+        {
+            "spec": "12V AC to AC wall wart",
+            "qty": 1
+        },
+        {
+            "spec": "matching plug socket",
+            "qty": 1
+        }
+    ]
+}
