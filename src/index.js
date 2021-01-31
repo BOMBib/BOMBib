@@ -98,14 +98,17 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             }
             cell.classList.add('readonly');
         }
-        if (r > 0 && c == PART_COUNT_COLUMN && !value) {
-            if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
-                instance.jexcel.setValue(id, '=SUMROWMUL(TABLE(), ROW() - 1, 0, ' + FIRST_PROJECT_COL + ')', true);
-                //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
-                for (let j = 0; j < project_count; j++) {
-                    let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-                    addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
-                    addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
+        if (r > 0 && c == PART_COUNT_COLUMN) {
+            let part_count_formula = '=SUMROWMUL(TABLE(), ROW() - 1, 0, ' + FIRST_PROJECT_COL + ')';
+            if (instance.jexcel.getValueFromCoords(c, r) != part_count_formula) {
+                if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
+                    instance.jexcel.setValue(id, part_count_formula, true);
+                    //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
+                    for (let j = 0; j < project_count; j++) {
+                        let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
+                        addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
+                        addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
+                    }
                 }
             }
             cell.classList.add('readonly');
