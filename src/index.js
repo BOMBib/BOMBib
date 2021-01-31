@@ -112,3 +112,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         }
     },
 });
+
+
+jexceltable.setComments(jexcel.getColumnName(FIRST_PROJECT_COL + 1) + '2', 'This is a comment for the resistor in Project 2');
