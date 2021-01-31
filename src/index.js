@@ -9,12 +9,17 @@ var data = [
 ];
 
 var part_categorys = [
-    'Resistor', 'Capacitor', 'Potentiometer', 'Diode', 'IC', ''
+    'Resistor',
+    'Capacitor',
+    'Potentiometer',
+    'Diode',
+    'IC',
+    '',
 ];
 
 var spec_autocompletes = {
     'Potentiometer': ['Mono', 'Stereo', 'Linear', 'Logarithmic'],
-    'Resistor': ['Matched']
+    'Resistor': ['Matched'],
 };
 var spec_all_autocompletes = Object.values(spec_autocompletes).flat();
 
@@ -79,13 +84,13 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     allowDeleteColumn: false,
     columns: [
         { type: 'dropdown', title: 'Part Category', width: 120, source: part_categorys },
-        { type: 'text', title: 'Value', width: 100,  },
+        { type: 'text', title: 'Value', width: 100 },
         //TODO: we want a text-autocomplete, not a drop-autocomplete
         //{ type: 'autocomplete', title:'Specification', width:100,  source: spec_all_autocompletes, multiple:true, filter: dropdownFilter},
-        { type: 'text', title: 'Specification', width: 100, },
-        { type: 'numerical', title: 'Cost per Part', width: 100, },
-        { type: 'numerical', title: 'Count', width: 100, },
-        { type: 'numerical', title: 'Cost', width: 100, },
+        { type: 'text', title: 'Specification', width: 100 },
+        { type: 'numerical', title: 'Cost per Part', width: 100 },
+        { type: 'numerical', title: 'Count', width: 100 },
+        { type: 'numerical', title: 'Cost', width: 100 },
 
         { type: 'numerical', title: 'Project 1', width: 80 },
         { type: 'numerical', title: 'Project 2', width: 80 },

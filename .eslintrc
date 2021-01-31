@@ -12,5 +12,12 @@
         func-call-spacing: ["error", "never"],
         "space-infix-ops": ["error", { "int32Hint": true }],
         semi: ["error", "always"],
+        comma-dangle: ["warn", {
+            "arrays": "always-multiline",
+            "objects": "always-multiline",
+            "imports": "never",
+            "exports": "never",
+            "functions": "never",
+        }],
     }
 }
