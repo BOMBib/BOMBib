@@ -81,6 +81,7 @@ with smart_open_write(outfile) as outhandle:
                 validator.validate(instance=project)
                 library.append({
                     "title": project["title"],
+                    "author": project["author"],
                     "committer": project["committer"],
                     "projectpath": path
                 })
