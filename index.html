@@ -36,57 +36,54 @@
             </ul>
         </div>
         <div class="container-fluid">
-            <div class="text-end"><button class="btn btn-primary" id="addProjectButton" data-bs-toggle="modal" data-bs-target="#addProjectModal"><i class="bi bi-plus-square-fill align-text-bottom"></i> Add project</button></div>
-            <div  id="spreadsheet"></div>
-        </div>
-        <div class="modal fade" id="addProjectModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addProjectModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addProjectModalLabel">Add projects</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="searchProjectInput" placeholder="...">
-                                    <label for="searchProjectInput">Search</label>
-                                </div>
+            <ul class="nav nav-tabs mb-3" id="tabs" role="tablist">
+                <li class="nav-item ms-3" role="presentation">
+                    <a class="nav-link" id="bib-tab" data-bs-toggle="tab" href="#bib-tab-pane" role="tab" aria-controls="bib-tab-pane" aria-selected="false">Bibliotheca</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="bom-tab" data-bs-toggle="tab" href="#bom-tab-pane" role="tab" aria-controls="bom-tab-pane" aria-selected="false">BOMs</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" id="bib-tab-pane" role="tabpanel" aria-labelledby="bib-tab">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="searchProjectInput" placeholder="...">
+                                <label for="searchProjectInput">Search</label>
                             </div>
-                            <div class="col-lg-2">
-                                <legend>Tags</legend>
-                                <div id="addProjectModalTagsDiv">
-                                    <div class="spinner-border" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-10">
-                                <legend>Projects</legend>
-                                <div class="list-group" id="projectListGroup">
-                                    <div class="list-group-item"><div class="d-flex justify-content-center">
-                                        <div class="spinner-border" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div></div>
-                                    </div>
-                                    <template id="projectListGroupItemTemplate">
-                                        <div class="list-group-item list-group-item-action">
-                                            <div class="d-flex w-100 justify-content-between">
-                                                <h5 class="mb-1 projecttitle"></h5>
-                                            </div>
-                                            <small class="text-muted projectauthor me-3" title="Author"></small><small class="text-muted projectcommitter me-3" title="Committer"></small>
-                                            <span class="projecttags"></span>
-                                        </div>
-                                    </template>
+                        </div>
+                        <div class="col-lg-2">
+                            <legend>Tags</legend>
+                            <div id="addProjectModalTagsDiv">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-10">
+                            <legend>Projects</legend>
+                            <div class="list-group" id="projectListGroup">
+                                <div class="list-group-item"><div class="d-flex justify-content-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div></div>
+                                </div>
+                                <template id="projectListGroupItemTemplate">
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1 projecttitle"></h5>
+                                        </div>
+                                        <small class="text-muted projectauthor me-3" title="Author"></small><small class="text-muted projectcommitter me-3" title="Committer"></small>
+                                        <span class="projecttags"></span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Add Projects</button>
-                    </div>
+                </div>
+                <div class="tab-pane" id="bom-tab-pane" role="tabpanel" aria-labelledby="bom-tab">
+                    <div id="spreadsheet"></div>
                 </div>
             </div>
         </div>

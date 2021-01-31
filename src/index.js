@@ -152,7 +152,7 @@ var getJSON = function(url, callback) {
 
 var initializedAddProjectModal = false;
 
-document.getElementById('addProjectModal').addEventListener('show.bs.modal', function () {
+function initializeBibtab() {
     if (!initializedAddProjectModal) {
         initializedAddProjectModal = true;
         getJSON('./projects/library.json', load_library);
@@ -166,7 +166,16 @@ document.getElementById('addProjectModal').addEventListener('show.bs.modal', fun
         });
         tagdiv.replaceChildren(nodes);
     }
-});
+}
+document.getElementById('bib-tab').addEventListener('show.bs.tab', initializeBibtab);
+if (!window.location.hash || window.location.hash == '#bib') {
+    let triggerEl = document.querySelector('#tabs a[href="#bib-tab-pane"]');
+    triggerEl.click();
+} else if (window.location.hash && window.location.hash == '#boms') {
+    let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
+    triggerEl.click();
+}
+
 
 var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
 
