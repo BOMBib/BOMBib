@@ -27,8 +27,8 @@ var dropdownFilter = function (instance, cell, c, r, source) {
 var SUMCOL = function(instance, columnId) {
     var total = 0;
     for (var j = 0; j < instance.options.data.length; j++) {
-        if (Number(instance.records[j][columnId - 1].innerHTML)) {
-            total += Number(instance.records[j][columnId - 1].innerHTML);
+        if (parseFloat(instance.records[j][columnId - 1].innerHTML, 10)) {
+            total += parseFloat(instance.records[j][columnId - 1].innerHTML, 10);
         }
     }
     return total;
@@ -45,6 +45,7 @@ var SUMROWMUL = function(instance, rowId, rowId2, startCol) {
 };
 
 var SPARE_COLUMNS = 3;
+var PER_PART_COST_COL = 3;
 var PART_COUNT_COLUMN = 4;
 var PER_PART_COST_SUM_COL = 5;
 var FIRST_PROJECT_COL = 6;
@@ -79,7 +80,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         { type: 'numerical', title: 'Project 1', width: 80 },
         { type: 'numerical', title: 'Project 2', width: 80 },
     ],
-    footers: [['', '', '', 'Total', '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN())']],
+    footers: [['', '', '', 'Total', '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"']],
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == 0 && c < FIRST_PROJECT_COL) {
             cell.classList.add('readonly');
@@ -92,9 +93,16 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 cell.innerHTML = cell.innerText + 'x';
             }
         }
-        if (r > 0 && c == PER_PART_COST_SUM_COL  && !instance.jexcel.getValue(id)) {
-            if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
-                instance.jexcel.setValue(id, '=D' + (r + 1) + ' * E' + (r + 1), true);
+        if (r > 0 && c == PER_PART_COST_COL && value) {
+            cell.innerHTML = parseFloat(instance.jexcel.options.data[r][c]).toFixed(3) + '¤';
+        }
+
+        if (r > 0 && c == PER_PART_COST_SUM_COL) {
+            if (!instance.jexcel.getValue(id) && instance.jexcel.rows.length - r > SPARE_COLUMNS) {
+                instance.jexcel.setValue(id, '=IF(D' + (r + 1) + ', D' + (r + 1) + ' * E' + (r + 1) + ", '')", true);
+            }
+            if (cell.innerHTML && cell.innerHTML[cell.innerHTML.length - 1] != '¤') {
+                cell.innerHTML = parseFloat(value).toFixed(3) + '¤';
             }
             cell.classList.add('readonly');
         }
