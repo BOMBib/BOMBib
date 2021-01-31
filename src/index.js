@@ -43,6 +43,16 @@ var SUMROWMUL = function(instance, rowId, rowId2, startCol) {
     }
     return total;
 };
+/* exported SUMCOLMUL */
+var SUMCOLMUL = function(instance, colId, colId2, startRow) {
+    var total = 0;
+    for (var j = startRow; j < instance.records.length; j++) {
+        if (parseFloat(instance.getValueFromCoords(colId, j), 10) && parseFloat(instance.getValueFromCoords(colId2, j), 10)) {
+            total += parseFloat(instance.getValueFromCoords(colId, j), 10) * parseFloat(instance.getValueFromCoords(colId2, j), 10);
+        }
+    }
+    return total.toFixed(3);
+};
 
 var SPARE_COLUMNS = 3;
 var PER_PART_COST_COL = 3;
@@ -80,7 +90,15 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         { type: 'numerical', title: 'Project 1', width: 80 },
         { type: 'numerical', title: 'Project 2', width: 80 },
     ],
-    footers: [['', '', '', 'Total', '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"']],
+    footers: [[
+        '',
+        '',
+        '',
+        'Total',
+        '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
+        '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"',
+        '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"',
+    ]],
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == 0 && c < FIRST_PROJECT_COL) {
             cell.classList.add('readonly');
