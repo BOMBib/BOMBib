@@ -33,7 +33,8 @@
         {
             "spec": "voltage regulator",
             "value": "7812",
-            "qty": 1
+            "qty": 1,
+            "note": "Some comment about this one having the pin connected to ground and the other one having it connected to the input? So heatsinks should not touch and be touched?"
         },
         {
             "spec": "voltage regulator",

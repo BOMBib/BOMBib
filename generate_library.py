@@ -62,6 +62,7 @@ schema = {
                         "value" : { "type": "string" },
                         "spec" : { "type": "string" },
                         "qty" : { "type": "integer" },
+                        "note": { "type": "string" }
                     },
                     "required": ["spec", "qty"]
                 }
