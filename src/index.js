@@ -288,5 +288,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
             }
         });
         projectModal.hide();
+        let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
+        triggerEl.click();
     }
 });
