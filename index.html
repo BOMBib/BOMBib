@@ -94,15 +94,26 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Project title...</h5>
+                        <div>
+                            <h5 class="modal-title">Project title...</h5>
+                            <small>by <span class="projectauthor"></span><span class="projectiscommitted"> committed by <span class="projectcommitter"></span></span></small>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div class="text-center">
+                          <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
                         <p>Project description, author, project links, project BOM</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Add Project to BOM</button>
+                        <button type="button" class="btn btn-primary" id="addProjectToBomButton" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"><span class="visually-hidden">Loading...</span></span>
+                            Add Project to BOMs
+                        </button>
                     </div>
                 </div>
             </div>

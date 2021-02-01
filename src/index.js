@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* global jexcel, config */
+/* global jexcel, bootstrap, config */
 
 var data = [
     ['', '', '', '', '', '', 1, 2],
@@ -225,14 +225,37 @@ function load_library(err, data) {
 
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {});
+var currentlyLoadedProject = null;
+function loadProject(project) {
+    //TODO Validate Project Schema
+    currentlyLoadedProject = project;
+    projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = 'none');
+    projectModalElement.querySelector('#addProjectToBomButton').disabled = false;
+    projectModalElement.querySelector('.modal-title').innerText = project.title;
+    projectModalElement.querySelector('.projectauthor').innerText = project.author.name;
+    projectModalElement.querySelector('.projectcommitter').innerText = project.committer.name;
+}
 
-window.addEventListener("hashchange", function () {
-    if (window.location.hash.substr(0, 9) == '#project:') {
+function loadProjectFromHash() {
+    if (window.location.hash.substr(0, 11) == '#project:./') {
+        projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = null);
+        projectModalElement.querySelector('#addProjectToBomButton').disabled = true;
         projectModal.show();
+        getJSON(window.location.hash.substr(9), function (err, data) {
+            if (err) {
+                alert("Could not load data");
+                return;
+            }
+            loadProject(data);
+        });
     } else {
         projectModal.hide();
+        currentlyLoadedProject = null;
     }
-}, false);
+}
+window.addEventListener("hashchange", loadProjectFromHash, false);
+loadProjectFromHash();
 projectModalElement.addEventListener('hidden.bs.modal', function () {
     window.location.hash = '';
 });
+
