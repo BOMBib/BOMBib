@@ -202,6 +202,7 @@ function load_library(err, data) {
     }
     let nodes = document.createDocumentFragment();
     let template = document.getElementById('projectListGroupItemTemplate');
+    let aNode = template.content.querySelector('a.list-group-item.list-group-item-action');
     let titleNode = template.content.querySelector('.projecttitle');
     let authorNode = template.content.querySelector('.projectauthor');
     let committerNode = template.content.querySelector('.projectcommitter');
@@ -209,16 +210,29 @@ function load_library(err, data) {
     data.forEach(function (p) {
         let project = parse_library(p);
         library.push(project);
-        console.log(project.title);
 
+        aNode.href = "#project:" + project.projectpath;
         titleNode.innerText = project.title;
         authorNode.innerText = project.author ? project.author.name : '';
         committerNode.innerText = '(' + project.committer.name + ')';
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
             return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
         }).join('');
-        console.log(tagsNode.innerHTML);
         nodes.appendChild(document.importNode(template.content, true));
     });
     listGroup.replaceChildren(nodes);
 }
+
+var projectModalElement = document.getElementById('projectModal');
+var projectModal = new bootstrap.Modal(projectModalElement, {});
+
+window.addEventListener("hashchange", function () {
+    if (window.location.hash.substr(0, 9) == '#project:') {
+        projectModal.show();
+    } else {
+        projectModal.hide();
+    }
+}, false);
+projectModalElement.addEventListener('hidden.bs.modal', function () {
+    window.location.hash = '';
+});

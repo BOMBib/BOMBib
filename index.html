@@ -75,13 +75,13 @@
                                     </div></div>
                                 </div>
                                 <template id="projectListGroupItemTemplate">
-                                    <div class="list-group-item list-group-item-action">
+                                    <a class="list-group-item list-group-item-action" href="#">
                                         <div class="d-flex w-100 justify-content-between">
                                             <h5 class="mb-1 projecttitle"></h5>
                                         </div>
                                         <small class="text-muted projectauthor me-3" title="Author"></small><small class="text-muted projectcommitter me-3" title="Committer"></small>
                                         <span class="projecttags"></span>
-                                    </div>
+                                    </a>
                                 </template>
                             </div>
                         </div>
@@ -89,6 +89,23 @@
                 </div>
                 <div class="tab-pane" id="bom-tab-pane" role="tabpanel" aria-labelledby="bom-tab">
                     <div id="spreadsheet"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" id="projectModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Project title...</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Project description, author, project links, project BOM</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add Project to BOM</button>
+                    </div>
                 </div>
             </div>
         </div>
