@@ -27,17 +27,13 @@
         </div>
         <div class="container">
             <h1>BOMBib</h1>
-            <p>This is only a first experimental version showing the idea.</p>
-            <p>Planned features to make this more complete:</p>
-            <ul>
-                <li>Searchable Library of Projects that can be added to the table below as new columns</li>
-                <li>Automatically merge rows when adding new project.</li>
-                <li>Function to merge 2 rows, because they represent the same component but weren't automatically merged</li>
-            </ul>
         </div>
         <div class="container-fluid">
             <ul class="nav nav-tabs mb-3" id="tabs" role="tablist">
                 <li class="nav-item ms-3" role="presentation">
+                    <a class="nav-link active" id="intro-tab" data-bs-toggle="tab" href="#intro-tab-pane" role="tab" aria-controls="intro-tab-pane" aria-selected="false">Intro</a>
+                </li>
+                <li class="nav-item" role="presentation">
                     <a class="nav-link" id="bib-tab" data-bs-toggle="tab" href="#bib-tab-pane" role="tab" aria-controls="bib-tab-pane" aria-selected="false">Bibliotheca</a>
                 </li>
                 <li class="nav-item" role="presentation">
@@ -45,6 +41,15 @@
                 </li>
             </ul>
             <div class="tab-content">
+                <div class="tab-pane active" id="intro-tab-pane" role="tabpanel" aria-labelledby="intro-tab">
+                    <p>This is only a first experimental version showing the idea.</p>
+                    <p>Planned features to make this more complete:</p>
+                    <ul>
+                        <li>Searchable Library of Projects that can be added to the table below as new columns</li>
+                        <li>Automatically merge rows when adding new project.</li>
+                        <li>Function to merge 2 rows, because they represent the same component but weren't automatically merged</li>
+                    </ul>
+                </div>
                 <div class="tab-pane" id="bib-tab-pane" role="tabpanel" aria-labelledby="bib-tab">
                     <div class="row">
                         <div class="col-12">

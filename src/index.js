@@ -168,12 +168,14 @@ function initializeBibtab() {
     }
 }
 document.getElementById('bib-tab').addEventListener('show.bs.tab', initializeBibtab);
-if (!window.location.hash || window.location.hash == '#bib') {
-    let triggerEl = document.querySelector('#tabs a[href="#bib-tab-pane"]');
-    triggerEl.click();
-} else if (window.location.hash && window.location.hash == '#boms') {
-    let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
-    triggerEl.click();
+if (window.location.hash) {
+    if (window.location.hash == '#bib') {
+        let triggerEl = document.querySelector('#tabs a[href="#bib-tab-pane"]');
+        triggerEl.click();
+    } else if (window.location.hash && window.location.hash == '#boms') {
+        let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
+        triggerEl.click();
+    }
 }
 
 
