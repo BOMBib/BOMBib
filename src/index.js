@@ -284,7 +284,11 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 row[1] = item.value || '';
                 row[2] = item.spec;
                 row[newColumn] = item.qty;
-                jexceltable.insertRow(row, jexceltable.rows.length - SPARE_COLUMNS - 1);
+                const rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
+                jexceltable.insertRow(row, rownum);
+                if (item.note) {
+                    jexceltable.setComments(jexcel.getColumnName(newColumn) + (rownum + 2), item.note);
+                }
             }
         });
         projectModal.hide();
