@@ -47,6 +47,8 @@ var PART_COUNT_COLUMN = 4;
 var PER_PART_COST_SUM_COL = 5;
 var FIRST_PROJECT_COL = 6;
 
+const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
+
 function addDependency(instance, cell, dependson) {
     if (dependson in instance.jexcel.formula) {
         instance.jexcel.formula[dependson].push(cell);
@@ -61,7 +63,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data: data,
     minSpareRows: SPARE_COLUMNS,
     columnSorting: false,
-    allowInsertColumn: false, // TODO: This needs to be enabled to add new columns later. Instead remove option from context menu.
     allowManualInsertColumn: false,
     allowDeleteColumn: false,
     columns: [
@@ -83,8 +84,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         '',
         'Total',
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
-        '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"',
-        '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"',
+        PROJECT_FOOTER_FORMULA,
+        PROJECT_FOOTER_FORMULA,
     ]],
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == 0 && c < FIRST_PROJECT_COL) {
@@ -259,3 +260,33 @@ projectModalElement.addEventListener('hidden.bs.modal', function () {
     window.location.hash = '';
 });
 
+
+document.getElementById('addProjectToBomButton').addEventListener('click', function () {
+    if (currentlyLoadedProject) {
+        var bomIndex = {};
+
+        jexceltable.options.data.forEach(function (row, i) {
+            if (!row[0] && !row[1] && !row[2]) return;
+            bomIndex[row[0] + '_' + row[1] + '_' + row[2]] = i;
+        });
+
+        let newColumn = jexceltable.colgroup.length;
+        jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
+        jexceltable.setValueFromCoords(newColumn, 0, 1); //Set count for new Project
+        jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
+        currentlyLoadedProject.bom.forEach((item) => {
+            let key = (item.type || '') + '_' + (item.value || '') + '_' + item.spec;
+            if (key in bomIndex) {
+                jexceltable.setValueFromCoords(newColumn, bomIndex[key], item.qty);
+            } else {
+                const row = new Array(newColumn).fill('');
+                row[0] = item.type || '';
+                row[1] = item.value || '';
+                row[2] = item.spec;
+                row[newColumn] = item.qty;
+                jexceltable.insertRow(row, jexceltable.rows.length - SPARE_COLUMNS - 1);
+            }
+        });
+        projectModal.hide();
+    }
+});
