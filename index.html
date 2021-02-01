@@ -40,12 +40,25 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="intro-tab-pane" role="tabpanel" aria-labelledby="intro-tab">
-                    <p>This is only a first experimental version showing the idea.</p>
-                    <p>Planned features to make this more complete:</p>
+                    <p>This is only a first experimental version showing the idea of having a library of BOMs, that then can be added to a combined BOM, that allows to calculate part counts and costs.</p>
+                    <p>The structure of the combined BOM is inspired by the "Modular in a Week"-Excel Sheet.</p>
+                    <p>What works</p>
+
                     <ul>
-                        <li>Searchable Library of Projects that can be added to the table below as new columns</li>
-                        <li>Automatically merge rows when adding new project.</li>
+                        <li>Displaying a list of projects that are loaded from the repository</li>
+                        <li>Clicking on a project and adding it to the BOM</li>
+                        <li>When adding a project the Project-BOM is somewhat merged into the existing table</li>
+                    </ul>
+                    <p>Whats missing in no particular order:</p>
+                    <ul>
+                        <li>More projects in the library</li>
+                        <li>Form to add new projects</li>
+                        <li>Search and Filter functions for the library</li>
+                        <li>Showing more information in the project dialog, like description, project links, project bom, ...</li>
                         <li>Function to merge 2 rows, because they represent the same component but weren't automatically merged</li>
+                        <li>Preventing accidental deletion of important rows/columns</li>
+                        <li>Persistent saving of the BOM and selected projects</li>
+                        <li>Showing Project Titles/Authors on the BOM-Tab</li>
                     </ul>
                 </div>
                 <div class="tab-pane" id="bib-tab-pane" role="tabpanel" aria-labelledby="bib-tab">
