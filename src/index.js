@@ -276,19 +276,22 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
         jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
         currentlyLoadedProject.bom.forEach((item) => {
             let key = (item.type || '') + '_' + (item.value || '') + '_' + item.spec;
+            let rownum = null;
             if (key in bomIndex) {
-                jexceltable.setValueFromCoords(newColumn, bomIndex[key], item.qty);
+                rownum =  bomIndex[key];
+                jexceltable.setValueFromCoords(newColumn, rownum, item.qty);
             } else {
                 const row = new Array(newColumn).fill('');
                 row[0] = item.type || '';
                 row[1] = item.value || '';
                 row[2] = item.spec;
                 row[newColumn] = item.qty;
-                const rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
+                rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
                 jexceltable.insertRow(row, rownum);
-                if (item.note) {
-                    jexceltable.setComments(jexcel.getColumnName(newColumn) + (rownum + 2), item.note);
-                }
+                rownum = rownum + 1;
+            }
+            if (item.note) {
+                jexceltable.setComments(jexcel.getColumnName(newColumn) + (rownum + 1), item.note);
             }
         });
         for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
