@@ -41,9 +41,9 @@ person_schema = {
     "type": "object",
     "properties": {
         "name": { "type": "string" },
-        "github": { "type": "string" },
-        "patreon": { "type": "string" },
-        "youtube": { "type": "string" },
+        "github": { "type": "string" }, #TODO: Validate URL
+        "patreon": { "type": "string" }, #TODO: Validate URL
+        "youtube": { "type": "string" }, #TODO: Validate URL
         "web": { "type": "string" }
     },
     "required": ["name"]
