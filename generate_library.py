@@ -41,7 +41,10 @@ person_schema = {
     "type": "object",
     "properties": {
         "name": { "type": "string" },
-        "github": { "type": "string" }
+        "github": { "type": "string" },
+        "patreon": { "type": "string" },
+        "youtube": { "type": "string" },
+        "web": { "type": "string" }
     },
     "required": ["name"]
 }

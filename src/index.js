@@ -226,6 +226,7 @@ function load_library(err, data) {
 
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {});
+var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 var currentlyLoadedProject = null;
 function loadProject(project) {
     //TODO Validate Project Schema
@@ -233,8 +234,25 @@ function loadProject(project) {
     projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = 'none');
     projectModalElement.querySelector('#addProjectToBomButton').disabled = false;
     projectModalElement.querySelector('.modal-title').innerText = project.title;
-    projectModalElement.querySelector('.projectauthor').innerText = project.author.name;
+    let projectAuthorNode = projectModalElement.querySelector('.projectauthor');
+    projectAuthorNode.innerText = project.author.name;
+    projectAuthorNode.dataset.bsOriginalTitle = project.author.name;
+    projectAuthorNode.dataset.bsContent = makePersonPopoverContent(project.author);
     projectModalElement.querySelector('.projectcommitter').innerText = project.committer.name;
+}
+
+function makePersonPopoverContent(person) {
+    let content = [];
+    if (person.github) {
+        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="https://github.com/' + person.github + '" target="_blank"><i class="bi bi-github"></i> GitHub</a>');
+    }
+    if (person.youtube) {
+        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="' + person.youtube + '" target="_blank"><i class="bi bi-youtube"></i> YouTube</a>');
+    }
+    if (person.patreon) {
+        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="' + person.patreon + '" target="_blank">Patreon</a>');
+    }
+    return content.join('<br/>');
 }
 
 function loadProjectFromHash() {
