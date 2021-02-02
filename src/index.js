@@ -183,7 +183,7 @@ if (window.location.hash) {
 var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
 
 var library = [];
-function parse_library(p) {
+function parse_tags(p) {
     p.tags = new Map();
     for (const match of p.title.matchAll(tagRegex)) {
         p.tags.set(match[1], true);
@@ -209,7 +209,7 @@ function load_library(err, data) {
     let committerNode = template.content.querySelector('.projectcommitter');
     let tagsNode = template.content.querySelector('.projecttags');
     data.forEach(function (p) {
-        let project = parse_library(p);
+        let project = parse_tags(p);
         library.push(project);
 
         aNode.href = "#project:" + project.projectpath;
@@ -230,6 +230,7 @@ var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.queryS
 var projectModalCommitterPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
 var currentlyLoadedProject = null;
 function loadProject(project) {
+    project = parse_tags(project);
     //TODO Validate Project Schema
     currentlyLoadedProject = project;
     projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = 'none');
@@ -243,6 +244,21 @@ function loadProject(project) {
     projectCommitterNode.innerText = project.committer.name;
     projectCommitterNode.dataset.bsOriginalTitle = project.committer.name;
     projectCommitterNode.dataset.bsContent = makePersonPopoverContent(project.committer);
+
+    let tagsHTML =  Array.from(project.tags.keys(), function (tag) {
+        return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
+    }).join('');
+    let description = '<p>Tags: ' + tagsHTML + '</p>';
+    if (project.links) {
+        description += '<ul>';
+        for (let label in project.links) {
+            description += '<li><a href="' + project.links[label] + '" target="_blank">' + label  + ' </a></li>';
+        }
+        description += '</ul>';
+
+    }
+    projectModalElement.querySelector('.projectdescription').innerHTML = description;
+    projectModalElement.querySelector('.projectdescription').appendChild(document.createTextNode(project.description));
 }
 
 function makePersonPopoverContent(person) {
