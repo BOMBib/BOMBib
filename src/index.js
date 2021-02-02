@@ -227,6 +227,7 @@ function load_library(err, data) {
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
 var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
+var projectModalCommitterPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
 var currentlyLoadedProject = null;
 function loadProject(project) {
     //TODO Validate Project Schema
@@ -238,7 +239,10 @@ function loadProject(project) {
     projectAuthorNode.innerText = project.author.name;
     projectAuthorNode.dataset.bsOriginalTitle = project.author.name;
     projectAuthorNode.dataset.bsContent = makePersonPopoverContent(project.author);
-    projectModalElement.querySelector('.projectcommitter').innerText = project.committer.name;
+    let projectCommitterNode = projectModalElement.querySelector('.projectcommitter');
+    projectCommitterNode.innerText = project.committer.name;
+    projectCommitterNode.dataset.bsOriginalTitle = project.committer.name;
+    projectCommitterNode.dataset.bsContent = makePersonPopoverContent(project.committer);
 }
 
 function makePersonPopoverContent(person) {
