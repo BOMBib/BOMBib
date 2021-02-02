@@ -225,7 +225,7 @@ function load_library(err, data) {
 }
 
 var projectModalElement = document.getElementById('projectModal');
-var projectModal = new bootstrap.Modal(projectModalElement, {});
+var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
 var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 var currentlyLoadedProject = null;
 function loadProject(project) {
