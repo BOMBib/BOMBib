@@ -50,10 +50,10 @@ var FIRST_PROJECT_COL = 6;
 const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
 function addDependency(instance, cell, dependson) {
-    if (dependson in instance.jexcel.formula) {
-        instance.jexcel.formula[dependson].push(cell);
+    if (dependson in instance.formula) {
+        instance.formula[dependson].push(cell);
     } else {
-        instance.jexcel.formula[dependson] = [cell];
+        instance.formula[dependson] = [cell];
     }
 }
 
@@ -120,8 +120,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                     //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
                     for (let j = 0; j < project_count; j++) {
                         let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-                        addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
-                        addDependency(instance, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
+                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
+                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
                     }
                 }
             }
@@ -291,6 +291,11 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 }
             }
         });
+        for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
+            let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
+            addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
+            addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
+        }
         projectModal.hide();
         let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
         triggerEl.click();
