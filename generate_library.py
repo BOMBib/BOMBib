@@ -85,7 +85,6 @@ with smart_open_write(outfile) as outhandle:
                 library.append({
                     "t": project["title"],
                     "a": project["author"]["name"],
-                    "c": project["committer"]["name"],
                     "p": path
                 })
     json.dump(library, outhandle)

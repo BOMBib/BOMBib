@@ -189,9 +189,6 @@ function parse_library_entry(p) {
     project.author = {
         'name': p.a,
     };
-    project.committer = {
-        'name': p.c,
-    };
     project.projectpath = p.p;
     return parse_tags(project);
 }
@@ -218,7 +215,6 @@ function load_library(err, data) {
     let aNode = template.content.querySelector('a.list-group-item.list-group-item-action');
     let titleNode = template.content.querySelector('.projecttitle');
     let authorNode = template.content.querySelector('.projectauthor');
-    let committerNode = template.content.querySelector('.projectcommitter');
     let tagsNode = template.content.querySelector('.projecttags');
     data.forEach(function (p) {
         let project = parse_library_entry(p);
@@ -227,7 +223,6 @@ function load_library(err, data) {
         aNode.href = "#project:" + project.projectpath;
         titleNode.innerText = project.title;
         authorNode.innerText = project.author ? project.author.name : '';
-        committerNode.innerText = '(' + project.committer.name + ')';
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
             return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
         }).join('');
