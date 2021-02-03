@@ -253,6 +253,7 @@ function loadProject(project) {
     let projectdescriptionDiv = projectModalElement.querySelector('.projectdescription');
     projectdescriptionDiv.innerHTML = '<p>Tags: ' + tagsHTML + '</p>';
     if (project.links) {
+        let youtubeembed = true;
         let linkList = document.createElement('ul');
         for (let label in project.links) {
             let li = document.createElement('li');
@@ -261,6 +262,18 @@ function loadProject(project) {
             el.target = "_blank";
             el.innerText = label;
             li.appendChild(el);
+            if (youtubeembed && project.links[label].substr(0, 32) == 'https://www.youtube.com/watch?v=') {
+                li.appendChild(document.createElement('br'));
+                youtubeembed = false;
+                //<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/pQKN30Mzi2g" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                el = document.createElement('iframe');
+                el.width = 560;
+                el.height = 315;
+                el.frameBorder = "0";
+                el.src = project.links[label].replace('https://www.youtube.com/watch?v=', 'https://www.youtube-nocookie.com/embed/');
+                el.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+                li.appendChild(el);
+            }
             linkList.appendChild(li);
         }
         projectdescriptionDiv.appendChild(linkList);
