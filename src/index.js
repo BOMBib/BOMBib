@@ -183,13 +183,25 @@ if (window.location.hash) {
 var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
 
 var library = [];
-function parse_tags(p) {
-    p.tags = new Map();
-    for (const match of p.title.matchAll(tagRegex)) {
-        p.tags.set(match[1], true);
+function parse_library_entry(p) {
+    let project = {};
+    project.title = p.t;
+    project.author = {
+        'name': p.a,
+    };
+    project.committer = {
+        'name': p.c,
+    };
+    project.projectpath = p.p;
+    return parse_tags(project);
+}
+function parse_tags(project) {
+    project.tags = new Map();
+    for (const match of project.title.matchAll(tagRegex)) {
+        project.tags.set(match[1], true);
     }
-    p.title = p.title.replace(tagRegex, '');
-    return p;
+    project.title = project.title.replace(tagRegex, '');
+    return project;
 }
 if (!('content' in document.createElement('template'))) {
     alert("Your browser does not support the necessary feature, Sorry.");
@@ -209,7 +221,7 @@ function load_library(err, data) {
     let committerNode = template.content.querySelector('.projectcommitter');
     let tagsNode = template.content.querySelector('.projecttags');
     data.forEach(function (p) {
-        let project = parse_tags(p);
+        let project = parse_library_entry(p);
         library.push(project);
 
         aNode.href = "#project:" + project.projectpath;

@@ -83,9 +83,9 @@ with smart_open_write(outfile) as outhandle:
                 project = json.load(h)
                 validator.validate(instance=project)
                 library.append({
-                    "title": project["title"],
-                    "author": project["author"],
-                    "committer": project["committer"],
-                    "projectpath": path
+                    "t": project["title"],
+                    "a": project["author"]["name"],
+                    "c": project["committer"]["name"],
+                    "p": path
                 })
     json.dump(library, outhandle)
