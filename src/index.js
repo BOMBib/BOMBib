@@ -237,9 +237,11 @@ function load_library(err, data) {
 }
 
 function escapeHTML(text) {
+    // DO NOT USE FOR HTML-PARAMETERS like <a href="".
+    // THIS DOES NOT ESCAPE QUOTATION MARKS
     let div = document.createElement('div');
     div.appendChild(document.createTextNode(text));
-    return div.innerHTML.replace('"', );
+    return div.innerHTML;
 }
 
 var projectModalElement = document.getElementById('projectModal');
