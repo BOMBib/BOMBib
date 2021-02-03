@@ -250,17 +250,23 @@ function loadProject(project) {
     let tagsHTML =  Array.from(project.tags.keys(), function (tag) {
         return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
     }).join('');
-    let description = '<p>Tags: ' + tagsHTML + '</p>';
+    let projectdescriptionDiv = projectModalElement.querySelector('.projectdescription');
+    projectdescriptionDiv.innerHTML = '<p>Tags: ' + tagsHTML + '</p>';
     if (project.links) {
-        description += '<ul>';
+        let linkList = document.createElement('ul');
         for (let label in project.links) {
-            description += '<li><a href="' + project.links[label] + '" target="_blank">' + label  + ' </a></li>';
+            let li = document.createElement('li');
+            let el = document.createElement('a');
+            el.href = project.links[label];
+            el.target = "_blank";
+            el.innerText = label;
+            li.appendChild(el);
+            linkList.appendChild(li);
         }
-        description += '</ul>';
-
+        projectdescriptionDiv.appendChild(linkList);
     }
-    projectModalElement.querySelector('.projectdescription').innerHTML = description;
-    projectModalElement.querySelector('.projectdescription').appendChild(document.createTextNode(project.description));
+
+    projectdescriptionDiv.appendChild(document.createTextNode(project.description));
 
     let projectModalBOM = projectModalElement.querySelector('.projectbom tbody');
     let bomFragment = document.createDocumentFragment();
