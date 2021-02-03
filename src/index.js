@@ -261,6 +261,44 @@ function loadProject(project) {
     }
     projectModalElement.querySelector('.projectdescription').innerHTML = description;
     projectModalElement.querySelector('.projectdescription').appendChild(document.createTextNode(project.description));
+
+    let projectModalBOM = projectModalElement.querySelector('.projectbom tbody');
+    let bomFragment = document.createDocumentFragment();
+    for (const bom of project.bom) {
+        let row = document.createElement('tr');
+        let el = document.createElement('td');
+        el.innerText = bom.type || '';
+        if (bom.note) {
+            el.rowSpan = 2;
+        }
+        row.appendChild(el);
+
+        el = document.createElement('td');
+        el.innerText = bom.value || '';
+        row.appendChild(el);
+
+        el = document.createElement('td');
+        el.innerText = bom.spec;
+        row.appendChild(el);
+
+        el = document.createElement('td');
+        el.innerText = bom.qty;
+        row.appendChild(el);
+        bomFragment.appendChild(row);
+
+        if (bom.note) {
+            row = document.createElement('tr');
+            el = document.createElement('td');
+            el.colSpan = 3;
+            el.className = 'text-muted';
+            el.innerText = bom.note;
+            el.innerHTML = '<i class="bi bi-chat-right-text-fill"></i> ' + el.innerHTML;
+            row.appendChild(el);
+            bomFragment.appendChild(row);
+        }
+    }
+    projectModalBOM.replaceChildren(bomFragment);
+
 }
 
 function makePersonPopover(popoverNode, person) {
