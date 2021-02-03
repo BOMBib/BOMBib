@@ -2,10 +2,7 @@
 /* global jexcel, bootstrap, config */
 
 var data = [
-    ['', '', '', '', '', '', 1, 2],
-    ['Resistor', '100k', '1%', '0.005', '', '', 3, 2],
-    ['Capacitor', '2nF', 'ceramic', '', '', '', 1, 1],
-    ['Potentiometer', '100k', 'Stereo Linear', '1.5', '', '', 2, 0],
+    ['', '', '', '', '', ''],
 ];
 
 let part_categorys = [''].concat(config.categorys);
@@ -57,7 +54,7 @@ function addDependency(instance, cell, dependson) {
     }
 }
 
-var project_count = 2;
+var project_count = 0;
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data: data,
@@ -74,9 +71,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         { type: 'numerical', title: 'Cost per Part', width: 100 },
         { type: 'numerical', title: 'Count', width: 100 },
         { type: 'numerical', title: 'Cost', width: 100 },
-
-        { type: 'numerical', title: 'Project 1', width: 80 },
-        { type: 'numerical', title: 'Project 2', width: 80 },
     ],
     footers: [[
         '',
@@ -84,8 +78,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         '',
         'Total',
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
-        PROJECT_FOOTER_FORMULA,
-        PROJECT_FOOTER_FORMULA,
     ]],
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == 0 && c < FIRST_PROJECT_COL) {
@@ -130,8 +122,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     },
 });
 
-
-jexceltable.setComments(jexcel.getColumnName(FIRST_PROJECT_COL + 1) + '2', 'This is a comment for the resistor in Project 2');
 
 //FROM https://stackoverflow.com/a/35970894/2256700
 var getJSON = function(url, callback) {
