@@ -63,11 +63,11 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     allowManualInsertColumn: false,
     allowDeleteColumn: false,
     columns: [
-        { type: 'dropdown', title: 'Part Category', width: 120, source: part_categorys },
-        { type: 'text', title: 'Value', width: 100 },
+        { type: 'dropdown', title: 'Part Category', width: 80, source: part_categorys },
+        { type: 'text', title: 'Value', width: 80 },
         //TODO: we want a text-autocomplete, not a drop-autocomplete
         //{ type: 'autocomplete', title:'Specification', width:100,  source: spec_all_autocompletes, multiple:true, filter: dropdownFilter},
-        { type: 'text', title: 'Specification', width: 100 },
+        { type: 'text', title: 'Specification', width: 200 },
         { type: 'numerical', title: 'Cost per Part', width: 100 },
         { type: 'numerical', title: 'Count', width: 100 },
         { type: 'numerical', title: 'Cost', width: 100 },
