@@ -329,6 +329,19 @@ function escapeCellContent(content) {
     }
 }
 
+function addNewProjectColumn() {
+    let newColumn = jexceltable.colgroup.length;
+    project_count += 1;
+    jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
+    jexceltable.setValueFromCoords(newColumn, 0, 1); //Set count for new Project
+    jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
+    for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
+        let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
+        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
+        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
+    }
+    return newColumn;
+}
 
 
 document.getElementById('addProjectToBomButton').addEventListener('click', function () {
@@ -340,11 +353,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
             bomIndex[row[0] + '_' + row[1] + '_' + row[2]] = i;
         });
 
-        let newColumn = jexceltable.colgroup.length;
-        project_count += 1;
-        jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
-        jexceltable.setValueFromCoords(newColumn, 0, 1); //Set count for new Project
-        jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
+        let newColumn = addNewProjectColumn();
         currentlyLoadedProject.bom.forEach((item) => {
             let key = (item.type || '') + '_' + (item.value || '') + '_' + item.spec;
             let rownum = null;
@@ -360,16 +369,14 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
                 jexceltable.insertRow(row, rownum);
                 rownum = rownum + 1;
+                let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (rownum + 1);
+                addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (rownum + 1));
+                addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
             }
             if (item.note) {
                 jexceltable.setComments(jexcel.getColumnName(newColumn) + (rownum + 1), item.note);
             }
         });
-        for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
-            let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-            addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
-            addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
-        }
         projectModal.hide();
         let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
         triggerEl.click();
