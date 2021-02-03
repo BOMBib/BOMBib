@@ -224,6 +224,12 @@ function load_library(err, data) {
     listGroup.replaceChildren(nodes);
 }
 
+function escapeHTML(text) {
+    let div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML.replace('"', );
+}
+
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
 var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
@@ -237,13 +243,10 @@ function loadProject(project) {
     projectModalElement.querySelector('#addProjectToBomButton').disabled = false;
     projectModalElement.querySelector('.modal-title').innerText = project.title;
     let projectAuthorNode = projectModalElement.querySelector('.projectauthor');
-    projectAuthorNode.innerText = project.author.name;
-    projectAuthorNode.dataset.bsOriginalTitle = project.author.name;
-    projectAuthorNode.dataset.bsContent = makePersonPopoverContent(project.author);
+    makePersonPopover(projectAuthorNode, project.author);
+
     let projectCommitterNode = projectModalElement.querySelector('.projectcommitter');
-    projectCommitterNode.innerText = project.committer.name;
-    projectCommitterNode.dataset.bsOriginalTitle = project.committer.name;
-    projectCommitterNode.dataset.bsContent = makePersonPopoverContent(project.committer);
+    makePersonPopover(projectCommitterNode, project.committer);
 
     let tagsHTML =  Array.from(project.tags.keys(), function (tag) {
         return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
@@ -261,18 +264,39 @@ function loadProject(project) {
     projectModalElement.querySelector('.projectdescription').appendChild(document.createTextNode(project.description));
 }
 
-function makePersonPopoverContent(person) {
-    let content = [];
+function makePersonPopover(popoverNode, person) {
+    popoverNode.innerText = person.name;
+    popoverNode.dataset.bsOriginalTitle = escapeHTML(person.name);
+    let content = document.createDocumentFragment();
+    //Create Elemenents from scratch, so we can get HTML-Parameter escaping by setting el.href
     if (person.github) {
-        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="https://github.com/' + person.github + '" target="_blank"><i class="bi bi-github"></i> GitHub</a>');
+        let el = document.createElement('A');
+        el.href = 'https://github.com/' + person.github;
+        el.target = "_blank";
+        el.className = 'btn btn-sm btn-outline-dark m-1';
+        el.innerHTML = '<i class="bi bi-github"></i> GitHub';
+        content.appendChild(el);
     }
     if (person.youtube) {
-        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="' + person.youtube + '" target="_blank"><i class="bi bi-youtube"></i> YouTube</a>');
+        let el = document.createElement('A');
+        el.href = person.youtube;
+        el.target = "_blank";
+        el.className = 'btn btn-sm btn-outline-dark m-1';
+        el.innerHTML = '<i class="bi bi-youtube"></i> YouTube';
+        content.appendChild(el);
     }
     if (person.patreon) {
-        content.push('<a class="btn btn-sm btn-outline-dark mb-1" href="' + person.patreon + '" target="_blank">Patreon</a>');
+        let el = document.createElement('A');
+        el.href = person.patreon;
+        el.target = "_blank";
+        el.className = 'btn btn-sm btn-outline-dark m-1';
+        el.innerHTML = 'Patreon';
+        content.appendChild(el);
     }
-    return content.join('<br/>');
+    let div = document.createElement('div');
+    div.appendChild(content);
+
+    popoverNode.dataset.bsContent = div.innerHTML;
 }
 
 function loadProjectFromHash() {
@@ -298,6 +322,15 @@ projectModalElement.addEventListener('hidden.bs.modal', function () {
     window.location.hash = '';
 });
 
+function escapeCellContent(content) {
+    if (content && content[0] == '=') {
+        return "=" + JSON.stringify(content);
+    } else {
+        return content;
+    }
+}
+
+
 
 document.getElementById('addProjectToBomButton').addEventListener('click', function () {
     if (currentlyLoadedProject) {
@@ -320,10 +353,10 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 jexceltable.setValueFromCoords(newColumn, rownum, item.qty);
             } else {
                 const row = new Array(newColumn).fill('');
-                row[0] = item.type || '';
-                row[1] = item.value || '';
-                row[2] = item.spec;
-                row[newColumn] = item.qty;
+                row[0] = escapeCellContent(item.type);
+                row[1] = escapeCellContent(item.value);
+                row[2] = escapeCellContent(item.spec);
+                row[newColumn] = Number(item.qty);
                 rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
                 jexceltable.insertRow(row, rownum);
                 rownum = rownum + 1;
