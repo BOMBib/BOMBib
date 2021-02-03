@@ -341,6 +341,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
         });
 
         let newColumn = jexceltable.colgroup.length;
+        project_count += 1;
         jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
         jexceltable.setValueFromCoords(newColumn, 0, 1); //Set count for new Project
         jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
