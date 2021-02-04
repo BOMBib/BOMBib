@@ -7,6 +7,7 @@ var config = {
         "Potentiometer",
         "Diode",
         "IC",
+        "Transistor",
     ],
     "category_spec_hints": {
         "Potentiometer": [
