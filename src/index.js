@@ -449,10 +449,33 @@ function sortBOMRows() {
     }
     let tabledata = jexceltable.options.data;
     let compString = (a, b) =>  a && b ? a.localeCompare(b) : (a ? -1 : (b ? 1 : 0));
+    const valueRegex = /^\s*(\d+(\.\d*)?)\s*([kK]|M|u|n)?(F)?\s*$/;
+    const unitMap = {
+        'G': 1e9,
+        'M': 1e6,
+        'k': 1e3,
+        'K': 1e3,
+        'u': 1e-6,
+        'n': 1e-9,
+        'p': 1e-12,
+        '': 1,
+    };
+    let compValue = function (a, b) {
+        const matchA = a.match(valueRegex);
+        if (matchA) {
+            const matchB = b.match(valueRegex);
+            if (matchB) {
+                const valueA = parseFloat(matchA[1], 10) * unitMap[matchA[3]];
+                const valueB = parseFloat(matchB[1], 10) * unitMap[matchB[3]];
+                return valueB - valueA;
+            }
+        }
+        return compString(a, b);
+    };
     rowIndex.sort(function (a, b) {
         let cmp = compString(tabledata[a][0], tabledata[b][0]);
         if (cmp != 0) return cmp;
-        cmp = compString(tabledata[a][1], tabledata[b][1]);
+        cmp = compValue(tabledata[a][1], tabledata[b][1]);
         if (cmp != 0) return cmp;
         cmp = compString(tabledata[a][2], tabledata[b][2]);
         return cmp;
