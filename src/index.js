@@ -298,7 +298,7 @@ function loadProject(project) {
         row.appendChild(el);
 
         el = document.createElement('td');
-        el.innerText = bom.spec;
+        el.innerText = bom.spec || '';
         row.appendChild(el);
 
         el = document.createElement('td');
@@ -413,7 +413,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
 
         let newColumn = addNewProjectColumn();
         currentlyLoadedProject.bom.forEach((item) => {
-            let key = (item.type || '') + '_' + (item.value || '') + '_' + item.spec;
+            let key = (item.type || '') + '_' + (item.value || '') + '_' + (item.spec || '');
             let rownum = null;
             if (key in bomIndex) {
                 rownum =  bomIndex[key];
