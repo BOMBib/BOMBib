@@ -146,7 +146,7 @@ var initializedAddProjectModal = false;
 function initializeBibtab() {
     if (!initializedAddProjectModal) {
         initializedAddProjectModal = true;
-        getJSON('./projects/library.json', load_library);
+        getJSON(config.librarypath, load_library);
         let tagdiv = document.getElementById('addProjectModalTagsDiv');
         let nodes = document.createDocumentFragment();
         config.projecttags.map(function (tag) {
@@ -200,6 +200,7 @@ function load_library(err, data) {
         listGroup.replaceChildren('<div class="list-group-item">An error occured</div>');
         return;
     }
+    let baseLibraryPath = config.librarypath.substring(0, config.librarypath.lastIndexOf('/') + 1);
     let nodes = document.createDocumentFragment();
     let template = document.getElementById('projectListGroupItemTemplate');
     let aNode = template.content.querySelector('a.list-group-item.list-group-item-action');
@@ -210,7 +211,7 @@ function load_library(err, data) {
         let project = parse_library_entry(p);
         library.push(project);
 
-        aNode.href = "#project:" + project.projectpath;
+        aNode.href = "#project:" + baseLibraryPath + project.projectpath;
         titleNode.innerText = project.title;
         authorNode.innerText = project.author ? project.author.name : '';
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {

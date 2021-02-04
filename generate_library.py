@@ -17,8 +17,10 @@ if len(sys.argv) > 2:
         print("Second argument is not writable")
         sys.exit(3)
     outfile = sys.argv[2]
+    relativeFromPath = os.path.dirname(outfile)
 else:
     outfile = '-'
+    relativeFromPath = os.curdir
 
 #From https://stackoverflow.com/a/17603000/2256700
 @contextlib.contextmanager
@@ -85,6 +87,6 @@ with smart_open_write(outfile) as outhandle:
                 library.append({
                     "t": project["title"],
                     "a": project["author"]["name"],
-                    "p": path
+                    "p": os.path.relpath(path, relativeFromPath)
                 })
     json.dump(library, outhandle)
