@@ -440,3 +440,36 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
         //#triggerEl.click();
     }
 });
+
+/* exported sortBOMRows */
+function sortBOMRows() {
+    let rowIndex = [];
+    for (let i = 1; i < jexceltable.rows.length - SPARE_COLUMNS; i++) {
+        rowIndex.push(i);
+    }
+    let tabledata = jexceltable.options.data;
+    let compString = (a, b) =>  a && b ? a.localeCompare(b) : (a ? -1 : (b ? 1 : 0));
+    rowIndex.sort(function (a, b) {
+        let cmp = compString(tabledata[a][0], tabledata[b][0]);
+        if (cmp != 0) return cmp;
+        cmp = compString(tabledata[a][1], tabledata[b][1]);
+        if (cmp != 0) return cmp;
+        cmp = compString(tabledata[a][2], tabledata[b][2]);
+        return cmp;
+    });
+
+    // Correct for the fact, that the index change after sorting.
+    // Increment all indexes that get shiftet by moving the row i
+    for (let i = 0; i < rowIndex.length; i++) {
+        for (let j = i + 1 ; j < rowIndex.length; j++) {
+            if (rowIndex[j] < rowIndex[i]) {
+                rowIndex[j]++;
+            }
+        }
+    }
+
+    rowIndex.forEach((oldIndex, newIndex) => {
+        jexceltable.moveRow(oldIndex, newIndex + 1);
+    });
+
+}
