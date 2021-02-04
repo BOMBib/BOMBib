@@ -357,7 +357,7 @@ function makePersonPopover(popoverNode, person) {
 }
 
 function loadProjectFromHash() {
-    if (window.location.hash.substr(0, 11) == '#project:./') {
+    if (window.location.hash.substr(0, 11) == '#project:./' || window.location.hash.substr(0, 12) == '#project:../') {
         projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = null);
         projectModalElement.querySelector('#addProjectToBomButton').disabled = true;
         projectModal.show();

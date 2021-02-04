@@ -1,6 +1,6 @@
 /* exported config */
 var config = {
-    "librarypath": "./projects/library.json",
+    "librarypath": "../library/projects/library.json",
     "categorys": [
         "Resistor",
         "Capacitor",
