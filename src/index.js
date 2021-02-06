@@ -159,13 +159,18 @@ function initializeBibtab() {
     }
 }
 document.getElementById('bib-tab').addEventListener('show.bs.tab', initializeBibtab);
+function switchTab(tab) {
+    if (tab == '#intro') {
+        bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#intro-tab-pane"]')).show();
+    } else if (tab == '#bib') {
+        bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bib-tab-pane"]')).show();
+    } else if (tab == '#boms') {
+        bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bom-tab-pane"]')).show();
+    }
+}
 window.addEventListener("load", function () {
     if (window.location.hash) {
-        if (window.location.hash == '#bib') {
-            bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bib-tab-pane"]')).show();
-        } else if (window.location.hash == '#boms') {
-            bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bom-tab-pane"]')).show();
-        }
+        switchTab(window.location.hash);
     }
 });
 
@@ -385,12 +390,21 @@ function loadProjectFromHash() {
     } else {
         projectModal.hide();
         currentlyLoadedProject = null;
+        switchTab(window.location.hash);
     }
 }
 window.addEventListener("hashchange", loadProjectFromHash, false);
 loadProjectFromHash();
 projectModalElement.addEventListener('hidden.bs.modal', function () {
-    window.location.hash = '';
+    if (document.getElementById('intro-tab-pane').classList.contains('active')) {
+        window.location.hash = '#intro';
+    } else if (document.getElementById('bib-tab-pane').classList.contains('active')) {
+        window.location.hash = '#bib';
+    } else if (document.getElementById('bom-tab-pane').classList.contains('active')) {
+        window.location.hash = '#boms';
+    } else {
+        window.location.hash = '';
+    }
 });
 
 function escapeCellContent(content) {
