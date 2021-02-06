@@ -159,15 +159,15 @@ function initializeBibtab() {
     }
 }
 document.getElementById('bib-tab').addEventListener('show.bs.tab', initializeBibtab);
-if (window.location.hash) {
-    if (window.location.hash == '#bib') {
-        let triggerEl = document.querySelector('#tabs a[href="#bib-tab-pane"]');
-        triggerEl.click();
-    } else if (window.location.hash && window.location.hash == '#boms') {
-        let triggerEl = document.querySelector('#tabs a[href="#bom-tab-pane"]');
-        triggerEl.click();
+window.addEventListener("load", function () {
+    if (window.location.hash) {
+        if (window.location.hash == '#bib') {
+            bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bib-tab-pane"]')).show();
+        } else if (window.location.hash == '#boms') {
+            bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#bom-tab-pane"]')).show();
+        }
     }
-}
+});
 
 
 var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
@@ -360,6 +360,15 @@ function makePersonPopover(popoverNode, person) {
 
     popoverNode.dataset.bsContent = div.innerHTML;
 }
+
+var triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'));
+triggerTabList.forEach(function (triggerEl) {
+    var tabTrigger = new bootstrap.Tab(triggerEl);
+
+    triggerEl.addEventListener('click', function () {
+        tabTrigger.show();
+    });
+});
 
 function loadProjectFromHash() {
     if (window.location.hash.substr(0, 11) == '#project:./' || window.location.hash.substr(0, 12) == '#project:../') {
