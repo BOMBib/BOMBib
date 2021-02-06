@@ -544,7 +544,7 @@ function sortBOMRows() {
     }
 
     rowIndex.forEach((oldIndex, newIndex) => {
-        jexceltable.moveRow(oldIndex, newIndex + LAST_BLOCKED_ROW + 2);
+        jexceltable.moveRow(oldIndex, newIndex + LAST_BLOCKED_ROW + 1);
     });
 
 }
