@@ -244,8 +244,9 @@ var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static
 var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 var projectModalCommitterPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
 var currentlyLoadedProject = null;
-function loadProject(project) {
+function loadProject(project, projectpath) {
     project = parse_tags(project);
+    project.projectpath = projectpath;
     //TODO Validate Project Schema
     currentlyLoadedProject = project;
     projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = 'none');
@@ -384,12 +385,13 @@ function loadProjectFromHash() {
         projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = null);
         projectModalElement.querySelector('#addProjectToBomButton').disabled = true;
         projectModal.show();
-        getJSON(window.location.hash.substr(9), function (err, data) {
+        var projectpath = window.location.hash.substr(9);
+        getJSON(projectpath, function (err, data) {
             if (err) {
                 alert("Could not load data");
                 return;
             }
-            loadProject(data);
+            loadProject(data, projectpath);
         });
     } else {
         projectModal.hide();
