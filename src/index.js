@@ -264,16 +264,21 @@ function loadProject(project) {
             el.innerText = label;
             li.appendChild(el);
             if (youtubeembed && project.links[label].substr(0, 32) == 'https://www.youtube.com/watch?v=') {
-                li.appendChild(document.createElement('br'));
                 youtubeembed = false;
-                //<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/pQKN30Mzi2g" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+                li.appendChild(document.createElement('br'));
+                let divel = document.createElement('div');
+                divel.className = 'ratio ratio-16x9';
+
                 el = document.createElement('iframe');
                 el.width = 560;
                 el.height = 315;
                 el.frameBorder = "0";
+                el.allowFullscreen = true;
                 el.src = project.links[label].replace('https://www.youtube.com/watch?v=', 'https://www.youtube-nocookie.com/embed/');
                 el.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-                li.appendChild(el);
+                divel.appendChild(el);
+                li.appendChild(divel);
             }
             linkList.appendChild(li);
         }
