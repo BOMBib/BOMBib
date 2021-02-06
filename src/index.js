@@ -463,7 +463,7 @@ function sortBOMRows() {
     }
     let tabledata = jexceltable.options.data;
     let compString = (a, b) =>  a && b ? a.localeCompare(b) : (a ? -1 : (b ? 1 : 0));
-    const valueRegex = /^\s*(\d+(\.\d*)?)\s*([kK]|M|u|n)?(F)?\s*$/;
+    const valueRegex = /^\s*(\d+(\.\d*)?)\s*(G|M|[kK]|u|n|p)?(F)?\s*$/;
     const unitMap = {
         'G': 1e9,
         'M': 1e6,
