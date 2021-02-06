@@ -60,6 +60,7 @@ function addDependency(instance, cell, dependson) {
 }
 
 var project_count = 0;
+var projects = {};
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data: data,
@@ -85,6 +86,22 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
     ]],
     updateTable: function(instance, cell, c, r, source, value, id) {
+        if (r == PROJECT_TITLE_ROW) {
+            if (c < FIRST_PROJECT_COL) {
+                cell.classList.add('readonly');
+                cell.classList.remove('jexcel_dropdown');
+                if (c == FIRST_PROJECT_COL - 1) {
+                    cell.innerHTML = 'Title:';
+                }
+            } else {
+                cell.classList.add('text-wrap');
+                if (projects[c]) {
+                    let project = projects[c];
+                    cell.classList.add('readonly');
+                    cell.innerHTML = '<a href="#project:' + project.projectpath + '">' + project.title + '</a>';
+                }
+            }
+        }
         if (r == PROJECT_COUNT_ROW && c < FIRST_PROJECT_COL) {
             cell.classList.add('readonly');
             cell.classList.remove('jexcel_dropdown');
@@ -421,7 +438,7 @@ function escapeCellContent(content) {
     }
 }
 
-function addNewProjectColumn() {
+function addNewProjectColumn(project) {
     let newColumn = jexceltable.colgroup.length;
     project_count += 1;
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
@@ -432,6 +449,7 @@ function addNewProjectColumn() {
         addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
         addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (PROJECT_COUNT_ROW + 1));
     }
+    projects[newColumn] = project;
     return newColumn;
 }
 
@@ -445,7 +463,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
             bomIndex[row[0] + '_' + row[1] + '_' + row[2]] = i;
         });
 
-        let newColumn = addNewProjectColumn();
+        let newColumn = addNewProjectColumn(currentlyLoadedProject);
         currentlyLoadedProject.bom.forEach((item) => {
             let key = (item.type || '') + '_' + (item.value || '') + '_' + (item.spec || '');
             let rownum = null;
