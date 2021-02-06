@@ -127,6 +127,11 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         }
         if (r > LAST_BLOCKED_ROW && c == PART_COUNT_COLUMN) {
             let part_count_formula = '=SUMROWMUL(TABLE(), ROW() - 1, ' + PROJECT_COUNT_ROW + ', ' + FIRST_PROJECT_COL + ')';
+            if (cell.innerHTML == '0') {
+                cell.parentNode.classList.add('unused_part_row');
+            } else {
+                cell.parentNode.classList.remove('unused_part_row');
+            }
             if (instance.jexcel.getValueFromCoords(c, r) != part_count_formula) {
                 if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
                     instance.jexcel.setValue(id, part_count_formula, true);
