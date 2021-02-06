@@ -151,7 +151,7 @@ function initializeBibtab() {
         let nodes = document.createDocumentFragment();
         config.projecttags.map(function (tag) {
             let node = document.createElement('div');
-            node.className = 'form-check';
+            node.className = 'form-check d-inline-block me-3 d-lg-block';
             node.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="addProjectModalTagCheck' + tag + '"><label class="form-check-label" for="addProjectModalTagCheck' + tag + '"> ' + tag + '</label>';
             nodes.appendChild(node);
         });
