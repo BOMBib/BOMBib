@@ -3,6 +3,7 @@
 
 var data = [
     ['', '', '', '', '', ''],
+    ['x', '', '', '', '', ''],
 ];
 
 let part_categorys = [''].concat(config.categorys);
@@ -38,13 +39,17 @@ var SUMCOLMUL = function(instance, colId, colId2, startRow) {
     return total.toFixed(3);
 };
 
-var SPARE_COLUMNS = 3;
-var PER_PART_COST_COL = 3;
-var PART_COUNT_COLUMN = 4;
-var PER_PART_COST_SUM_COL = 5;
-var FIRST_PROJECT_COL = 6;
+const LAST_BLOCKED_ROW = 1;
+const SPARE_COLUMNS = 3;
+const PER_PART_COST_COL = 3;
+const PART_COUNT_COLUMN = 4;
+const PER_PART_COST_SUM_COL = 5;
+const FIRST_PROJECT_COL = 6;
 
-const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), 1) + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
+const PROJECT_TITLE_ROW = 0;
+const PROJECT_COUNT_ROW = 1;
+
+const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) +') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
 function addDependency(instance, cell, dependson) {
     if (dependson in instance.formula) {
@@ -80,22 +85,21 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
     ]],
     updateTable: function(instance, cell, c, r, source, value, id) {
-        if (r == 0 && c < FIRST_PROJECT_COL) {
+        if (r == PROJECT_COUNT_ROW && c < FIRST_PROJECT_COL) {
             cell.classList.add('readonly');
             cell.classList.remove('jexcel_dropdown');
             cell.innerHTML = c == FIRST_PROJECT_COL - 1 ? 'Count:' : '';
-            cell.style.backgroundColor = '#f3f3f3';
         }
-        if (r == 0 && c >= FIRST_PROJECT_COL) {
+        if (r == PROJECT_COUNT_ROW && c >= FIRST_PROJECT_COL) {
             if (cell.innerText > 0) {
                 cell.innerHTML = cell.innerText + 'x';
             }
         }
-        if (r > 0 && c == PER_PART_COST_COL && value) {
+        if (r > LAST_BLOCKED_ROW && c == PER_PART_COST_COL && value) {
             cell.innerHTML = parseFloat(instance.jexcel.options.data[r][c]).toFixed(3) + '¤';
         }
 
-        if (r > 0 && c == PER_PART_COST_SUM_COL) {
+        if (r > LAST_BLOCKED_ROW && c == PER_PART_COST_SUM_COL) {
             if (!instance.jexcel.getValue(id) && instance.jexcel.rows.length - r > SPARE_COLUMNS) {
                 instance.jexcel.setValue(id, '=IF(D' + (r + 1) + ', D' + (r + 1) + ' * E' + (r + 1) + ", '')", true);
             }
@@ -104,8 +108,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             }
             cell.classList.add('readonly');
         }
-        if (r > 0 && c == PART_COUNT_COLUMN) {
-            let part_count_formula = '=SUMROWMUL(TABLE(), ROW() - 1, 0, ' + FIRST_PROJECT_COL + ')';
+        if (r > LAST_BLOCKED_ROW && c == PART_COUNT_COLUMN) {
+            let part_count_formula = '=SUMROWMUL(TABLE(), ROW() - 1, ' + PROJECT_COUNT_ROW + ', ' + FIRST_PROJECT_COL + ')';
             if (instance.jexcel.getValueFromCoords(c, r) != part_count_formula) {
                 if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
                     instance.jexcel.setValue(id, part_count_formula, true);
@@ -113,7 +117,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                     for (let j = 0; j < project_count; j++) {
                         let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
                         addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
-                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + "1");
+                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (PROJECT_COUNT_ROW + 1));
                     }
                 }
             }
@@ -419,12 +423,12 @@ function addNewProjectColumn() {
     let newColumn = jexceltable.colgroup.length;
     project_count += 1;
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
-    jexceltable.setValueFromCoords(newColumn, 0, 1); //Set count for new Project
+    jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
     for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
         let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
         addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
-        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
+        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (PROJECT_COUNT_ROW + 1));
     }
     return newColumn;
 }
@@ -472,7 +476,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
 /* exported sortBOMRows */
 function sortBOMRows() {
     let rowIndex = [];
-    for (let i = 1; i < jexceltable.rows.length - SPARE_COLUMNS; i++) {
+    for (let i = LAST_BLOCKED_ROW + 1; i < jexceltable.rows.length - SPARE_COLUMNS; i++) {
         rowIndex.push(i);
     }
     let tabledata = jexceltable.options.data;
@@ -520,7 +524,7 @@ function sortBOMRows() {
     }
 
     rowIndex.forEach((oldIndex, newIndex) => {
-        jexceltable.moveRow(oldIndex, newIndex + 1);
+        jexceltable.moveRow(oldIndex, newIndex + LAST_BLOCKED_ROW + 2);
     });
 
 }
