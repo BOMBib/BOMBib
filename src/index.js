@@ -105,8 +105,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             cell.innerHTML = c == FIRST_PROJECT_COL - 1 ? 'Count:' : '';
         }
         if (r == PROJECT_COUNT_ROW && c >= FIRST_PROJECT_COL) {
-            if (cell.innerText != '' && Number.isFinite(Number(cell.innerText))) {
-                cell.innerHTML = cell.innerText + 'x';
+            if (instance.jexcel.options.data[r][c] != '' && Number.isFinite(Number(instance.jexcel.options.data[r][c]))) {
+                cell.innerHTML = (instance.jexcel.options.data[r][c]) + 'x';
             } else {
                 cell.innerHTML = '';
             }
