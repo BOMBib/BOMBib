@@ -58,7 +58,6 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     minSpareRows: SPARE_ROWS,
     columnSorting: false,
     allowManualInsertColumn: false,
-    allowDeleteColumn: false,
     columns: [
         { type: 'dropdown', title: 'Part Category', width: 80, source: part_categorys },
         { type: 'text', title: 'Value', width: 80 },
@@ -603,4 +602,15 @@ function sortBOMRows() {
         jexceltable.moveRow(oldIndex, newIndex + LAST_BLOCKED_ROW + 1);
     });
 
+}
+
+/* exported clearBOMTable */
+function clearBOMTable() {
+    projects = {};
+    if (jexceltable.options.data[0].length > FIRST_PROJECT_COL) {
+        jexceltable.deleteColumn(FIRST_PROJECT_COL, jexceltable.options.data[0].length - FIRST_PROJECT_COL + 1);
+    }
+    document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
+    jexceltable.setFooter([jexceltable.options.footers[0].slice(0, FIRST_PROJECT_COL - 1)]);
+    jexceltable.deleteRow(LAST_BLOCKED_ROW + 1, jexceltable.options.data.length - LAST_BLOCKED_ROW);
 }
