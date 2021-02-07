@@ -76,6 +76,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
     ]],
     onafterchanges: function() {
+        if (currentylLoading) return;
         if (saveToLocalStorageTimeout) {
             clearTimeout(saveToLocalStorageTimeout);
         }
