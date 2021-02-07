@@ -51,14 +51,6 @@ const PROJECT_COUNT_ROW = 1;
 
 const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) +') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
-function addDependency(instance, cell, dependson) {
-    if (dependson in instance.formula) {
-        instance.formula[dependson].push(cell);
-    } else {
-        instance.formula[dependson] = [cell];
-    }
-}
-
 var project_count = 0;
 var projects = {};
 /* exported jexceltable */
@@ -135,19 +127,34 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             if (instance.jexcel.getValueFromCoords(c, r) != part_count_formula) {
                 if (instance.jexcel.rows.length - r > SPARE_ROWS) {
                     instance.jexcel.setValue(id, part_count_formula, true);
-                    //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
-                    for (let j = 0; j < project_count; j++) {
-                        let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (r + 1));
-                        addDependency(instance.jexcel, cellName, jexcel.getColumnName(FIRST_PROJECT_COL + j) + (PROJECT_COUNT_ROW + 1));
-                    }
                 }
             }
             cell.classList.add('readonly');
         }
+        setDependencies(instance.jexcel, c, r);
     },
 });
 
+function setDependencies(instance, c, r) {
+    let cellName = jexcel.getColumnName(c) + (r + 1);
+    if (c >= FIRST_PROJECT_COL && r > LAST_BLOCKED_ROW) {
+        // When component count in project changes the total component count changes
+        if (!instance.formula[cellName] || instance.formula[cellName].length != 1) {
+            instance.formula[cellName] = [jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1)];
+        }
+    }
+    if (c >= FIRST_PROJECT_COL && r == PROJECT_COUNT_ROW) {
+        //When a project count changes all component counts change
+        if (!instance.formula[cellName] || instance.formula[cellName].length != instance.options.data.length - LAST_BLOCKED_ROW - 1) {
+            let deps = [];
+            for (let i = LAST_BLOCKED_ROW + 1; i < instance.options.data.length; i++) {
+                deps.push(jexcel.getColumnName(PART_COUNT_COLUMN) + (i + 1));
+            }
+            instance.formula[cellName] = deps;
+        }
+    }
+
+}
 
 //FROM https://stackoverflow.com/a/35970894/2256700
 var getJSON = function(url, callback) {
@@ -449,11 +456,6 @@ function addNewProjectColumn(project) {
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
     jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
-    for (let r = 0; r < jexceltable.rows.length - SPARE_ROWS; r++) {
-        let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
-        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
-        addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (PROJECT_COUNT_ROW + 1));
-    }
     projects[newColumn] = project;
     return newColumn;
 }
@@ -484,9 +486,6 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 rownum = jexceltable.rows.length - SPARE_ROWS - 1;
                 jexceltable.insertRow(row, rownum);
                 rownum = rownum + 1;
-                let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (rownum + 1);
-                addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (rownum + 1));
-                addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + "1");
             }
             if (item.note) {
                 jexceltable.setComments(jexcel.getColumnName(newColumn) + (rownum + 1), item.note);
