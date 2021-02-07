@@ -104,8 +104,10 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
             cell.innerHTML = c == FIRST_PROJECT_COL - 1 ? 'Count:' : '';
         }
         if (r == PROJECT_COUNT_ROW && c >= FIRST_PROJECT_COL) {
-            if (cell.innerText > 0) {
+            if (cell.innerText != '' && Number.isFinite(Number(cell.innerText))) {
                 cell.innerHTML = cell.innerText + 'x';
+            } else {
+                cell.innerHTML = '';
             }
         }
         if (r > LAST_BLOCKED_ROW && c == PER_PART_COST_COL && value) {
