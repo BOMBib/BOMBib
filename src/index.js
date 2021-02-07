@@ -51,7 +51,6 @@ const PROJECT_COUNT_ROW = 1;
 
 const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) +') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
-var project_count = 0;
 var projects = {};
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
@@ -452,7 +451,6 @@ function escapeCellContent(content) {
 
 function addNewProjectColumn(project) {
     let newColumn = jexceltable.colgroup.length;
-    project_count += 1;
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
     jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
