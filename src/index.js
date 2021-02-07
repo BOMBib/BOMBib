@@ -76,6 +76,12 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         'Total',
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
     ]],
+    onafterchanges: function() {
+        if (saveToLocalStorageTimeout) {
+            clearTimeout(saveToLocalStorageTimeout);
+        }
+        saveToLocalStorageTimeout = setTimeout(saveToLocalStorage, 100);
+    },
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == PROJECT_TITLE_ROW) {
             if (c < FIRST_PROJECT_COL) {
@@ -154,6 +160,45 @@ function setDependencies(instance, c, r) {
     }
 
 }
+
+var currentylLoading = true;
+var saveToLocalStorageTimeout = null;
+const LOCAL_STROAGE_KEY = 'bom_table_data';
+function saveToLocalStorage() {
+    if (currentylLoading) return;
+    saveToLocalStorageTimeout = null;
+    let tabledata = jexceltable.getData().slice(0, -SPARE_ROWS);
+    let data = {
+        "projects": projects,
+        "tabledata": tabledata,
+    };
+    localStorage.setItem(LOCAL_STROAGE_KEY, JSON.stringify(data));
+}
+
+function loadFromLocalStorage() {
+    let data = localStorage.getItem(LOCAL_STROAGE_KEY);
+    if (data) {
+        currentylLoading = true;
+        data = JSON.parse(data);
+        let tabledata = data.tabledata;
+
+        let importColumnCount = tabledata[0].length;
+        let tableColumnCount = jexceltable.options.data[0].length;
+        if (tableColumnCount > importColumnCount) {
+            //TODO Delete columns
+        } else {
+            while (jexceltable.options.data[0].length < importColumnCount) {
+                addNewProjectColumn(null);
+            }
+        }
+        projects = data.projects;
+        jexceltable.setData(tabledata);
+        // Use setValue to force update of component counts
+        jexceltable.setValueFromCoords(FIRST_PROJECT_COL, PROJECT_COUNT_ROW, jexceltable.options.data[PROJECT_COUNT_ROW][FIRST_PROJECT_COL]);
+    }
+    currentylLoading = false;
+}
+loadFromLocalStorage();
 
 //FROM https://stackoverflow.com/a/35970894/2256700
 var getJSON = function(url, callback) {
