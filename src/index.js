@@ -40,7 +40,7 @@ var SUMCOLMUL = function(instance, colId, colId2, startRow) {
 };
 
 const LAST_BLOCKED_ROW = 1;
-const SPARE_COLUMNS = 3;
+const SPARE_ROWS = 3;
 const PER_PART_COST_COL = 3;
 const PART_COUNT_COLUMN = 4;
 const PER_PART_COST_SUM_COL = 5;
@@ -64,7 +64,7 @@ var projects = {};
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data: data,
-    minSpareRows: SPARE_COLUMNS,
+    minSpareRows: SPARE_ROWS,
     columnSorting: false,
     allowManualInsertColumn: false,
     allowDeleteColumn: false,
@@ -117,7 +117,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         }
 
         if (r > LAST_BLOCKED_ROW && c == PER_PART_COST_SUM_COL) {
-            if (!instance.jexcel.getValue(id) && instance.jexcel.rows.length - r > SPARE_COLUMNS) {
+            if (!instance.jexcel.getValue(id) && instance.jexcel.rows.length - r > SPARE_ROWS) {
                 instance.jexcel.setValue(id, '=IF(D' + (r + 1) + ', D' + (r + 1) + ' * E' + (r + 1) + ", '')", true);
             }
             if (cell.innerHTML && cell.innerHTML[cell.innerHTML.length - 1] != '¤') {
@@ -133,7 +133,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 cell.parentNode.classList.remove('unused_part_row');
             }
             if (instance.jexcel.getValueFromCoords(c, r) != part_count_formula) {
-                if (instance.jexcel.rows.length - r > SPARE_COLUMNS) {
+                if (instance.jexcel.rows.length - r > SPARE_ROWS) {
                     instance.jexcel.setValue(id, part_count_formula, true);
                     //We have to set the dependencies of this field manually, because jexcel fails to figure them out.
                     for (let j = 0; j < project_count; j++) {
@@ -449,7 +449,7 @@ function addNewProjectColumn(project) {
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
     jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
-    for (let r = 0; r < jexceltable.rows.length - SPARE_COLUMNS; r++) {
+    for (let r = 0; r < jexceltable.rows.length - SPARE_ROWS; r++) {
         let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (r + 1);
         addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (r + 1));
         addDependency(jexceltable, cellName, jexcel.getColumnName(newColumn) + (PROJECT_COUNT_ROW + 1));
@@ -481,7 +481,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
                 row[1] = escapeCellContent(item.value);
                 row[2] = escapeCellContent(item.spec);
                 row[newColumn] = Number(item.qty);
-                rownum = jexceltable.rows.length - SPARE_COLUMNS - 1;
+                rownum = jexceltable.rows.length - SPARE_ROWS - 1;
                 jexceltable.insertRow(row, rownum);
                 rownum = rownum + 1;
                 let cellName = jexcel.getColumnName(PART_COUNT_COLUMN) + (rownum + 1);
@@ -501,7 +501,7 @@ document.getElementById('addProjectToBomButton').addEventListener('click', funct
 /* exported sortBOMRows */
 function sortBOMRows() {
     let rowIndex = [];
-    for (let i = LAST_BLOCKED_ROW + 1; i < jexceltable.rows.length - SPARE_COLUMNS; i++) {
+    for (let i = LAST_BLOCKED_ROW + 1; i < jexceltable.rows.length - SPARE_ROWS; i++) {
         rowIndex.push(i);
     }
     let tabledata = jexceltable.options.data;
