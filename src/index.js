@@ -164,6 +164,12 @@ function setDependencies(instance, c, r) {
 var currentylLoading = true;
 var saveToLocalStorageTimeout = null;
 const LOCAL_STROAGE_KEY = 'bom_table_data';
+const channel = new BroadcastChannel('BOMBib-channel');
+channel.onmessage = function (evt) {
+    if (evt.data.action == 'updatedLocalStorage') {
+        loadFromLocalStorage();
+    }
+};
 function saveToLocalStorage() {
     if (currentylLoading) return;
     saveToLocalStorageTimeout = null;
@@ -173,6 +179,9 @@ function saveToLocalStorage() {
         "tabledata": tabledata,
     };
     localStorage.setItem(LOCAL_STROAGE_KEY, JSON.stringify(data));
+    channel.postMessage({
+        'action': 'updatedLocalStorage',
+    });
 }
 
 function loadFromLocalStorage() {
