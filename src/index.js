@@ -49,7 +49,7 @@ const FIRST_PROJECT_COL = 6;
 const PROJECT_TITLE_ROW = 0;
 const PROJECT_COUNT_ROW = 1;
 
-const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) +') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
+const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) + ') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
 var projects = {};
 /* exported jexceltable */
