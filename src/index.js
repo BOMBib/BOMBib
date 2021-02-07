@@ -205,7 +205,9 @@ function loadFromLocalStorage() {
         projects = data.projects;
         jexceltable.setData(tabledata);
         // Use setValue to force update of component counts
-        jexceltable.setValueFromCoords(FIRST_PROJECT_COL, PROJECT_COUNT_ROW, jexceltable.options.data[PROJECT_COUNT_ROW][FIRST_PROJECT_COL]);
+        if (importColumnCount > FIRST_PROJECT_COL) {
+            jexceltable.setValueFromCoords(FIRST_PROJECT_COL, PROJECT_COUNT_ROW, jexceltable.options.data[PROJECT_COUNT_ROW][FIRST_PROJECT_COL]);
+        }
     }
     currentylLoading = false;
 }
