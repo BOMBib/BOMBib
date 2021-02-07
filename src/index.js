@@ -196,7 +196,7 @@ function loadFromLocalStorage() {
         let importColumnCount = tabledata[0].length;
         let tableColumnCount = jexceltable.options.data[0].length;
         if (tableColumnCount > importColumnCount) {
-            //TODO Delete columns
+            deleteLastColumns(tableColumnCount - importColumnCount)
         } else {
             while (jexceltable.options.data[0].length < importColumnCount) {
                 addNewProjectColumn(null);
@@ -609,13 +609,19 @@ function sortBOMRows() {
 
 }
 
+function deleteLastColumns(n) {
+    let firstToDelete = jexceltable.options.data[0].length - n;
+    jexceltable.deleteColumn(firstToDelete, n);
+    document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
+    jexceltable.setFooter([jexceltable.options.footers[0].slice(0, FIRST_PROJECT_COL - 1)]);
+}
+
 /* exported clearBOMTable */
 function clearBOMTable() {
     projects = {};
     if (jexceltable.options.data[0].length > FIRST_PROJECT_COL) {
-        jexceltable.deleteColumn(FIRST_PROJECT_COL, jexceltable.options.data[0].length - FIRST_PROJECT_COL + 1);
+        deleteLastColumns(jexceltable.options.data[0].length - FIRST_PROJECT_COL);
     }
-    document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
-    jexceltable.setFooter([jexceltable.options.footers[0].slice(0, FIRST_PROJECT_COL - 1)]);
     jexceltable.deleteRow(LAST_BLOCKED_ROW + 1, jexceltable.options.data.length - LAST_BLOCKED_ROW);
+    saveToLocalStorage();
 }
