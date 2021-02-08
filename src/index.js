@@ -140,6 +140,136 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         }
         setDependencies(instance.jexcel, c, r);
     },
+    contextMenu: function(obj, x, y) {
+        var items = [];
+
+        if (y == null) {
+            items.push({
+                title: "Add blank project column",
+                onclick: addNewProjectColumn,
+            });
+
+            // Rename column
+            if (y >= FIRST_PROJECT_COL && obj.options.allowRenameColumn == true) {
+                items.push({
+                    title: obj.options.text.renameThisColumn,
+                    onclick: function() {
+                        obj.setHeader(x);
+                    },
+                });
+            }
+
+        } else {
+            // Insert new row
+            if (y >= LAST_BLOCKED_ROW) {
+                if (y >= LAST_BLOCKED_ROW + 1) {
+                    items.push({
+                        title: obj.options.text.insertANewRowBefore,
+                        onclick: function() {
+                            obj.insertRow(1, parseInt(y), 1);
+                        },
+                    });
+                }
+
+                items.push({
+                    title: obj.options.text.insertANewRowAfter,
+                    onclick: function() {
+                        obj.insertRow(1, parseInt(y));
+                    },
+                });
+            }
+
+            if (y > LAST_BLOCKED_ROW && obj.options.allowDeleteRow == true) {
+                items.push({
+                    title: obj.options.text.deleteSelectedRows,
+                    onclick: function() {
+                        obj.deleteRow(obj.getSelectedRows().length ? undefined : parseInt(y));
+                    },
+                });
+            }
+
+            if (x) {
+                if (obj.options.allowComments == true) {
+                    items.push({ type: 'line' });
+
+                    var title = obj.records[y][x].getAttribute('title') || '';
+
+                    items.push({
+                        title: title ? obj.options.text.editComments : obj.options.text.addComments,
+                        onclick: function() {
+                            var comment = prompt(obj.options.text.comments, title);
+                            if (comment) {
+                                obj.setComments([ x, y ], comment);
+                            }
+                        },
+                    });
+
+                    if (title) {
+                        items.push({
+                            title: obj.options.text.clearComments,
+                            onclick: function() {
+                                obj.setComments([ x, y ], '');
+                            },
+                        });
+                    }
+                }
+            }
+        }
+
+        // Line
+        if (y >= LAST_BLOCKED_ROW) {
+            items.push({ type: 'line' });
+        }
+
+        // Copy
+        items.push({
+            title: obj.options.text.copy,
+            shortcut: 'Ctrl + C',
+            onclick: function() {
+                obj.copy(true);
+            },
+        });
+
+        // Paste
+        if (navigator && navigator.clipboard) {
+            items.push({
+                title: obj.options.text.paste,
+                shortcut: 'Ctrl + V',
+                onclick: function() {
+                    if (obj.selectedCell) {
+                        navigator.clipboard.readText().then(function(text) {
+                            if (text) {
+                                jexcel.current.paste(obj.selectedCell[0], obj.selectedCell[1], text);
+                            }
+                        });
+                    }
+                },
+            });
+        }
+
+        // Save
+        if (obj.options.allowExport) {
+            items.push({
+                title: obj.options.text.saveAs,
+                shortcut: 'Ctrl + S',
+                onclick: function () {
+                    obj.download();
+                },
+            });
+        }
+
+        // About
+        if (obj.options.about) {
+            items.push({
+                title: obj.options.text.about,
+                onclick: function() {
+                    alert(obj.options.about);
+                },
+            });
+        }
+
+        return items;
+    },
 });
 
 function setDependencies(instance, c, r) {
