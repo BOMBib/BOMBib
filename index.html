@@ -125,9 +125,9 @@
                 </div>
                 <div class="tab-pane overflow-auto" id="bom-tab-pane" role="tabpanel" aria-labelledby="bom-tab">
                     <div id="spreadsheet"></div>
-                    <button type="button" class="btn btn-primary" onclick="addNewProjectColumn()">Add blank project Column</button>
-                    <button type="button" class="btn btn-secondary" onclick="sortBOMRows()">Sort BOM Rows</button>
-                    <button type="button" class="btn btn-danger" onclick="clearBOMTable()">Clear Table</button>
+                    <button type="button" class="btn m-1 btn-primary" onclick="addNewProjectColumn()">Add blank project Column</button>
+                    <button type="button" class="btn m-1 btn-secondary" onclick="sortBOMRows()">Sort BOM Rows</button>
+                    <button type="button" class="btn m-1 btn-danger" onclick="clearBOMTable()">Clear Table</button>
                 </div>
             </div>
         </div>
@@ -158,18 +158,20 @@
                           </div>
                         </div>
                         <div class="projectdescription">Project description, author, project links, project BOM</div>
-                        <table class="projectbom table">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Value</th>
-                                    <th>Spec</th>
-                                    <th>Count</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="projectbom table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Value</th>
+                                        <th>Spec</th>
+                                        <th>Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
