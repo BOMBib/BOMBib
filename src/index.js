@@ -52,6 +52,15 @@ const PROJECT_COUNT_ROW = 1;
 const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) + ') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
 var projects = {};
+
+function queueSave() {
+    if (currentylLoading) return;
+    if (saveToLocalStorageTimeout) {
+        clearTimeout(saveToLocalStorageTimeout);
+    }
+    saveToLocalStorageTimeout = setTimeout(saveToLocalStorage, 100);
+}
+
 /* exported jexceltable */
 var jexceltable = jexcel(document.getElementById('spreadsheet'), {
     data: data,
@@ -75,13 +84,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
         'Total',
         '=SUMCOL(TABLE(), COLUMN())', '=SUMCOL(TABLE(), COLUMN()) + "¤"',
     ]],
-    onafterchanges: function() {
-        if (currentylLoading) return;
-        if (saveToLocalStorageTimeout) {
-            clearTimeout(saveToLocalStorageTimeout);
-        }
-        saveToLocalStorageTimeout = setTimeout(saveToLocalStorage, 100);
-    },
+    onmoverow: queueSave,
+    onafterchanges: queueSave,
     updateTable: function(instance, cell, c, r, source, value, id) {
         if (r == PROJECT_TITLE_ROW) {
             if (c < FIRST_PROJECT_COL) {
