@@ -326,7 +326,7 @@ function loadFromLocalStorage() {
         let importColumnCount = tabledata[0].length;
         let tableColumnCount = jexceltable.options.data[0].length;
         if (tableColumnCount > importColumnCount) {
-            deleteLastColumns(tableColumnCount - importColumnCount)
+            deleteLastColumns(tableColumnCount - importColumnCount);
         } else {
             while (jexceltable.options.data[0].length < importColumnCount) {
                 addNewProjectColumn(null);
