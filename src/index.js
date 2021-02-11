@@ -113,8 +113,10 @@ function escapeHTML(text) {
 
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
-var projectModalAuthorPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
-var projectModalCommitterPopover = new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
+
+new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
+new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
+
 var currentlyLoadedProject = null;
 function loadProject(project, projectpath) {
     project = parse_tags(project);
@@ -210,6 +212,7 @@ function loadProject(project, projectpath) {
 
 document.getElementById('addProjectToBomButton').addEventListener('click', function () {
     if (currentlyLoadedProject) {
+        /* global addProjectToBom */
         addProjectToBom(currentlyLoadedProject, function () {
             projectModal.hide();
         });
