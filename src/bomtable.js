@@ -348,6 +348,17 @@ function clearBOMTable() {
     saveToLocalStorage();
 }
 
+function deleteProject(colnumber) {
+    for (let i = colnumber + 1; i < jexceltable.options.data[0].length; i++) {
+        projects[i - 1] = projects[i];
+    }
+    delete projects[jexceltable.options.data[0].length];
+    jexceltable.deleteColumn(colnumber);
+    document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
+    jexceltable.setFooter([jexceltable.options.footers[0].slice(0, -1)]);
+    saveToLocalStorage();
+}
+
 
 function bomtablecontextmenu(obj, x, y) {
     var items = [];
@@ -364,6 +375,14 @@ function bomtablecontextmenu(obj, x, y) {
                 title: obj.options.text.renameThisColumn,
                 onclick: function() {
                     obj.setHeader(x);
+                },
+            });
+        }
+        if (x >= FIRST_PROJECT_COL) {
+            items.push({
+                title: "Remove Project",
+                onclick: function () {
+                    deleteProject(y);
                 },
             });
         }
