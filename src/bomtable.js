@@ -359,7 +359,7 @@ function bomtablecontextmenu(obj, x, y) {
         });
 
         // Rename column
-        if (y >= FIRST_PROJECT_COL && obj.options.allowRenameColumn == true) {
+        if (x >= FIRST_PROJECT_COL && obj.options.allowRenameColumn == true) {
             items.push({
                 title: obj.options.text.renameThisColumn,
                 onclick: function() {
