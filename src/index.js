@@ -28,7 +28,7 @@ function initializeBibtab() {
         config.projecttags.map(function (tag) {
             let node = document.createElement('div');
             node.className = 'form-check d-inline-block me-3 d-lg-block';
-            node.innerHTML = '<input class="form-check-input" type="checkbox" value="" id="addProjectModalTagCheck' + tag + '"><label class="form-check-label" for="addProjectModalTagCheck' + tag + '"> ' + tag + '</label>';
+            node.innerHTML = '<input class="form-check-input" type="checkbox" value="' + tag + '" id="addProjectModalTagCheck' + tag + '"><label class="form-check-label" for="addProjectModalTagCheck' + tag + '"> ' + tag + '</label>';
             nodes.appendChild(node);
         });
         tagdiv.replaceChildren(nodes);
@@ -64,9 +64,9 @@ function parse_library_entry(p) {
     return parse_tags(project);
 }
 function parse_tags(project) {
-    project.tags = new Map();
+    project.tags = new Set();
     for (const match of project.title.matchAll(tagRegex)) {
-        project.tags.set(match[1], true);
+        project.tags.add(match[1]);
     }
     project.title = project.title.replace(tagRegex, '');
     return project;
@@ -93,12 +93,16 @@ function load_library(err, data) {
         library.push(project);
 
         aNode.href = "#project:" + baseLibraryPath + project.projectpath;
+        aNode.className = 'list-group-item list-group-item-action ' + Array.from(project.tags.keys(), function (tag) {
+            return 'tag_class_' +  tag;
+        }).join(' ');
         titleNode.innerText = project.title;
         authorNode.innerText = project.author ? project.author.name : '';
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
             return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
         }).join('');
         nodes.appendChild(document.importNode(template.content, true));
+        project.node = nodes.lastElementChild;
     });
     listGroup.replaceChildren(nodes);
 }
@@ -294,4 +298,35 @@ projectModalElement.addEventListener('hidden.bs.modal', function () {
     } else {
         window.location.hash = '';
     }
+});
+
+document.getElementById('addProjectModalTagsDiv').addEventListener('change', function () {
+    let tagDiv = document.getElementById('addProjectModalTagsDiv');
+
+    let projects = library;
+
+    let checked = tagDiv.querySelectorAll('input[type="checkbox"]:checked');
+    if (checked.length) {
+        let selectedTags = Array.prototype.slice.call(checked).map(function (c) {
+            return c.value;
+        });
+        projects = projects.filter(function (project) {
+            for (let tag in selectedTags) {
+                if (project.tags.has(selectedTags[tag])) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+
+    let nodes = projects.map(function (project) {
+        return project.node;
+    });
+    let fragment = document.createDocumentFragment();
+    for (let node in nodes) {
+        fragment.appendChild(nodes[node]);
+    }
+    let listGroup = document.getElementById('projectListGroup');
+    listGroup.replaceChildren(fragment);
 });
