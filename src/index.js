@@ -23,7 +23,7 @@ function initializeBibtab() {
     if (!initializedAddProjectModal) {
         initializedAddProjectModal = true;
         getJSON(config.librarypath, load_library);
-        let tagdiv = document.getElementById('addProjectModalTagsDiv');
+        let tagdiv = document.getElementById('libraryTagFilterDiv');
         let nodes = document.createDocumentFragment();
         config.projecttags.map(function (tag) {
             let node = document.createElement('div');
@@ -306,7 +306,7 @@ function escapeRegExp(string) {
 }
 
 function refilterLibraryListGroup() {
-    let tagDiv = document.getElementById('addProjectModalTagsDiv');
+    let tagDiv = document.getElementById('libraryTagFilterDiv');
 
     let projects = library;
 
@@ -348,7 +348,7 @@ function refilterLibraryListGroup() {
     listGroup.replaceChildren(fragment);
 }
 
-document.getElementById('addProjectModalTagsDiv').addEventListener('change', refilterLibraryListGroup);
+document.getElementById('libraryTagFilterDiv').addEventListener('change', refilterLibraryListGroup);
 
 var searchInputFilterTimeout = null;
 document.getElementById('searchProjectInput').addEventListener('input', function () {
