@@ -26,6 +26,10 @@
                 width: 5em;
             }
 
+            #newProjectCategoryTabs button.nav-link:focus {
+                outline: 0;
+            }
+
         </style>
         <title>BOMBib</title>
     </head>
@@ -107,7 +111,10 @@
                             </div>
                         </div>
                         <div class="col-lg-10">
-                            <legend>Projects</legend>
+                            <div class="d-flex justify-content-between">
+                                <legend class="w-auto">Projects</legend>
+                                <span><a href="#newProject" class="btn btn-info btn-sm" role="button"><i class="bi bi-journal-plus"></i> New Project</a></span>
+                            </div>
                             <div class="list-group" id="projectListGroup">
                                 <div class="list-group-item"><div class="d-flex justify-content-center">
                                     <div class="spinner-border" role="status">
@@ -182,6 +189,60 @@
                         <button type="button" class="btn btn-primary" id="addProjectToBomButton" disabled>
                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"><span class="visually-hidden">Loading...</span></span>
                             Add Project to BOMs
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="-1" aria-hidden="true" id="newProjectModal">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header border-0">
+                        <div>
+                            <h5 class="modal-title">New Project</h5>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <ul class="nav nav-tabs" id="newProjectCategoryTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent ms-3 active" id="newProjectAuthorTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectAuthorTab" type="button" role="tab" aria-controls="newProjectAuthorTab" aria-selected="true">Author</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent" id="newProjectCommitterTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectCommitterTab" type="button" role="tab" aria-controls="newProjectCommitterTab" aria-selected="false">Committer</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent" id="newProjectDescriptionTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectDescriptionTab" type="button" role="tab" aria-controls="newProjectDescriptionTab" aria-selected="false">Description</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent" id="newProjectLinksTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectLinksTab" type="button" role="tab" aria-controls="newProjectLinksTab" aria-selected="false">Links</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link bg-transparent" id="newProjectBOMTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectBOMTab" type="button" role="tab" aria-controls="newProjectBOMTab" aria-selected="false">BOM</button>
+                        </li>
+                    </ul>
+                    <div class="modal-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="newProjectAuthorTab" role="tabpanel" aria-labelledby="newProjectAuthorTab-tab">
+                                A
+                            </div>
+                            <div class="tab-pane" id="newProjectCommitterTab" role="tabpanel" aria-labelledby="newProjectCommitterTab-tab">
+                                B
+                            </div>
+                            <div class="tab-pane" id="newProjectDescriptionTab" role="tabpanel" aria-labelledby="newProjectDescriptionTab-tab">
+                                C
+                            </div>
+                            <div class="tab-pane" id="newProjectLinksTab" role="tabpanel" aria-labelledby="newProjectLinksTab-tab">
+                                D
+                            </div>
+                            <div class="tab-pane" id="newProjectBOMTab" role="tabpanel" aria-labelledby="newProjectBOMTab-tab">
+                                E
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">
+                            Save
                         </button>
                     </div>
                 </div>

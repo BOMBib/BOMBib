@@ -117,6 +117,8 @@ function escapeHTML(text) {
 
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
+var newProjectModalElement = document.getElementById('newProjectModal');
+var newProjectModal = new bootstrap.Modal(newProjectModalElement, {'backdrop': 'static', 'keyboard': false});
 
 new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
@@ -269,6 +271,7 @@ triggerTabList.forEach(function (triggerEl) {
 
 function loadProjectFromHash() {
     if (window.location.hash.substr(0, 11) == '#project:./' || window.location.hash.substr(0, 12) == '#project:../') {
+        newProjectModal.hide();
         projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = null);
         projectModalElement.querySelector('#addProjectToBomButton').disabled = true;
         projectModal.show();
@@ -280,15 +283,19 @@ function loadProjectFromHash() {
             }
             loadProject(data, projectpath);
         });
+    } else if (window.location.hash == '#newProject') {
+        projectModal.hide();
+        newProjectModal.show();
     } else {
         projectModal.hide();
+        newProjectModal.hide();
         currentlyLoadedProject = null;
         switchTab(window.location.hash);
     }
 }
 window.addEventListener("hashchange", loadProjectFromHash, false);
 loadProjectFromHash();
-projectModalElement.addEventListener('hidden.bs.modal', function () {
+function restoreHashAfterModalClose() {
     if (document.getElementById('intro-tab-pane').classList.contains('active')) {
         window.location.hash = '#intro';
     } else if (document.getElementById('bib-tab-pane').classList.contains('active')) {
@@ -298,7 +305,9 @@ projectModalElement.addEventListener('hidden.bs.modal', function () {
     } else {
         window.location.hash = '';
     }
-});
+}
+projectModalElement.addEventListener('hidden.bs.modal', restoreHashAfterModalClose);
+newProjectModalElement.addEventListener('hidden.bs.modal', restoreHashAfterModalClose);
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
 function escapeRegExp(string) {
