@@ -259,7 +259,29 @@
                             <div class="tab-pane" id="newProjectCommitterTab" role="tabpanel" aria-labelledby="newProjectCommitterTab-tab">
                             </div>
                             <div class="tab-pane" id="newProjectDescriptionTab" role="tabpanel" aria-labelledby="newProjectDescriptionTab-tab">
-                                C
+                                <div class="row mb-1">
+                                    <label for="newProjectTitle" class="col-form-label col-md-2">Title</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" id="newProjectTitle" placeholder="Title of the project">
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <label for="newProjectDescription" class="col-form-label col-md-2">Description</label>
+                                    <div class="col-md-10">
+                                        <textarea type="text" class="form-control" id="newProjectDescription" placeholder="Description of the project"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <label for="newProjectTags" class="col-form-label col-md-2">Tags</label>
+                                    <div class="col-md-10" id="newProjectModalTagsDiv">
+                                        <template id="newProjectModalTagElementTemplate">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="checkbox" id="" value="option1">
+                                                <label class="form-check-label" for=""></label>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
                             </div>
                             <div class="tab-pane" id="newProjectLinksTab" role="tabpanel" aria-labelledby="newProjectLinksTab-tab">
                                 D
