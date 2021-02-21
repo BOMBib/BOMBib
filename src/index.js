@@ -300,10 +300,27 @@ projectModalElement.addEventListener('hidden.bs.modal', function () {
     }
 });
 
-document.getElementById('addProjectModalTagsDiv').addEventListener('change', function () {
+// From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function refilterLibraryListGroup() {
     let tagDiv = document.getElementById('addProjectModalTagsDiv');
 
     let projects = library;
+
+
+    let searchtext = document.getElementById('searchProjectInput').value;
+    if (searchtext) {
+        let regex = '^' + searchtext.split(/\s+/).map(function (word) {
+            return '(?=.*?' + escapeRegExp(word) + ')';
+        }).join('');
+        regex = new RegExp(regex, 'i');
+        projects = projects.filter(function (project) {
+            return project.title.match(regex);
+        });
+    }
 
     let checked = tagDiv.querySelectorAll('input[type="checkbox"]:checked');
     if (checked.length) {
@@ -329,4 +346,17 @@ document.getElementById('addProjectModalTagsDiv').addEventListener('change', fun
     }
     let listGroup = document.getElementById('projectListGroup');
     listGroup.replaceChildren(fragment);
+}
+
+document.getElementById('addProjectModalTagsDiv').addEventListener('change', refilterLibraryListGroup);
+
+var searchInputFilterTimeout = null;
+document.getElementById('searchProjectInput').addEventListener('input', function () {
+    if (searchInputFilterTimeout) {
+        clearTimeout(searchInputFilterTimeout);
+    }
+    searchInputFilterTimeout = setTimeout(function () {
+        searchInputFilterTimeout = null;
+        refilterLibraryListGroup();
+    }, 200);
 });
