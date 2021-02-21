@@ -31,7 +31,11 @@ function initializeNewProjectModal() {
         data: [[]],
         minSpareRows: 3,
         columnSorting: false,
+        defaultColWidth: 80,
         allowManualInsertColumn: false,
+        tableOverflow: true,
+        freezeColumns: 5,
+        tableHeight: '600px',
         columns: [
             { type: 'dropdown', title: 'Part Category', width: 80, source: [''].concat(config.categorys) },
             { type: 'text', title: 'Value', width: 80 },
