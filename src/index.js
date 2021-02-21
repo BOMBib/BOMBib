@@ -37,24 +37,6 @@ function initializeBibtab() {
 document.getElementById('bib-tab').addEventListener('show.bs.tab', initializeBibtab);
 
 
-function initializeNewProjectModal() {
-    let tagDiv = document.getElementById('newProjectModalTagsDiv');
-    let template = document.getElementById('newProjectModalTagElementTemplate');
-    let label = template.content.querySelector('label');
-    let input = template.content.querySelector('input');
-    let fragment = document.createDocumentFragment();
-    for (let tag of config.projecttags) {
-        label.innerText = tag;
-        label.for = 'newProjectModalTag' + tag;
-        input.id = label.for;
-        input.value = tag;
-        fragment.appendChild(document.importNode(template.content, true));
-    }
-    tagDiv.replaceChildren(fragment);
-}
-initializeNewProjectModal();
-
-
 function switchTab(tab) {
     if (tab == '#intro') {
         bootstrap.Tab.getInstance(document.querySelector('#tabs a[data-bs-target="#intro-tab-pane"]')).show();
@@ -137,8 +119,6 @@ function escapeHTML(text) {
 
 var projectModalElement = document.getElementById('projectModal');
 var projectModal = new bootstrap.Modal(projectModalElement, {'backdrop': 'static', 'keyboard': false});
-var newProjectModalElement = document.getElementById('newProjectModal');
-var newProjectModal = new bootstrap.Modal(newProjectModalElement, {'backdrop': 'static', 'keyboard': false});
 
 new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
@@ -288,8 +268,8 @@ triggerTabList.forEach(function (triggerEl) {
         tabTrigger.show();
     });
 });
-
 function loadProjectFromHash() {
+    /* global newProjectModal */
     if (window.location.hash.substr(0, 11) == '#project:./' || window.location.hash.substr(0, 12) == '#project:../') {
         newProjectModal.hide();
         projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = null);
@@ -327,6 +307,7 @@ function restoreHashAfterModalClose() {
     }
 }
 projectModalElement.addEventListener('hidden.bs.modal', restoreHashAfterModalClose);
+/* global newProjectModalElement */
 newProjectModalElement.addEventListener('hidden.bs.modal', restoreHashAfterModalClose);
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
