@@ -223,10 +223,40 @@
                     <div class="modal-body">
                         <div class="tab-content">
                             <div class="tab-pane active" id="newProjectAuthorTab" role="tabpanel" aria-labelledby="newProjectAuthorTab-tab">
-                                A
+                                <template id="personInformationTemplate">
+                                    <div class="row mb-1">
+                                        <label for="Name" class="col-form-label col-md-2">Name</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="Name" placeholder="Given name and surname or pseudonym">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label for="GitHub" class="col-form-label col-md-2">GitHub</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="GitHub" placeholder="Account name" pattern="^([A-Za-z0-9]([A-Za-z0-9]|-[A-Za-z0-9]){0,38})?$">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label for="YouTube" class="col-form-label col-md-2">YouTube</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="YouTube" placeholder="https://www.youtube.com/channel/&lt;channel&gt;" pattern="^(https?://(www\.)?youtube\.com/(channel|user)/[\w-]+)?$">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label for="Patreon" class="col-form-label col-md-2">Patreon</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="Patreon" placeholder="https://www.patreon.com/&lt;creator-name&gt;" pattern="^(https://www.patreon.com/\S{3,})?$">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-1">
+                                        <label for="Web" class="col-form-label col-md-2">Web</label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" id="Web" placeholder="http://... " pattern="^(https?://.+)?$">
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                             <div class="tab-pane" id="newProjectCommitterTab" role="tabpanel" aria-labelledby="newProjectCommitterTab-tab">
-                                B
                             </div>
                             <div class="tab-pane" id="newProjectDescriptionTab" role="tabpanel" aria-labelledby="newProjectDescriptionTab-tab">
                                 C
@@ -238,6 +268,21 @@
                                 E
                             </div>
                         </div>
+                        <script type="text/javascript">
+                            (function () {
+                                let template = document.getElementById('personInformationTemplate');
+                                for (let x of ['newProjectAuthor', 'newProjectCommitter']) {
+                                    let node = document.importNode(template.content, true);
+                                    node.querySelectorAll('label[for]').forEach(function (item) {
+                                        item.for = x + item.for;
+                                    });
+                                    node.querySelectorAll('input[id]').forEach(function (item) {
+                                        item.id = x + item.id;
+                                    });
+                                    document.getElementById(x + 'Tab').replaceChildren(node);
+                                }
+                            })();
+                        </script>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
