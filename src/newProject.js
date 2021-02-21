@@ -45,7 +45,7 @@ function initializeNewProjectModal() {
         ],
         updateTable: function(instance, cell, c, r, source, value, id) {
             if (c != NEW_PROJECT_CATEGORY_COL && c != NEW_PROJECT_VALUE_COL && c != NEW_PROJECT_SPEC_COL && c != NEW_PROJECT_NOTE_COL && c != NEW_PROJECT_QTY_COL) {
-                cell.classList.add('bg-light');
+                cell.classList.add('non_import_part_col');
             }
             if (c == NEW_PROJECT_NOTE_COL) {
                 cell.classList.add('text-wrap');
