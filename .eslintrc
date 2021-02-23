@@ -25,5 +25,8 @@
             "exports": "never",
             "functions": "never",
         }],
+        "no-unused-vars": ["error", {
+            "args": "none",
+        }],
     }
 }
