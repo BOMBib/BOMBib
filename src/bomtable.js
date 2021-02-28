@@ -51,7 +51,7 @@ const PROJECT_COUNT_ROW = 1;
 
 const PROJECT_FOOTER_FORMULA = '=VALUE(COLUMN(), ' + (PROJECT_COUNT_ROW + 1) + ') + SUMCOLMUL(TABLE(), COLUMN() - 1, ' + PER_PART_COST_COL + ', 1) + "¤"';
 
-var projects = {};
+var projectsInBOMTable = {};
 
 function queueSave() {
     if (currentylLoading) return;
@@ -94,8 +94,8 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 }
             } else {
                 cell.classList.add('text-wrap');
-                if (projects[c]) {
-                    let project = projects[c];
+                if (projectsInBOMTable[c]) {
+                    let project = projectsInBOMTable[c];
                     cell.classList.add('readonly');
                     cell.innerHTML = '<a href="#project:' + project.projectpath + '">' + project.title + '</a>';
                 }
@@ -179,7 +179,7 @@ function saveToLocalStorage() {
     if (currentylLoading) return;
     let tabledata = jexceltable.getData().slice(0, -SPARE_ROWS);
     let data = {
-        "projects": projects,
+        "projects": projectsInBOMTable,
         "tabledata": tabledata,
     };
     localStorage.setItem(LOCAL_STROAGE_KEY, JSON.stringify(data));
@@ -204,7 +204,7 @@ function loadFromLocalStorage() {
                 addNewProjectColumn(null);
             }
         }
-        projects = data.projects;
+        projectsInBOMTable = data.projects;
         jexceltable.setData(tabledata);
         // Use setValue to force update of component counts
         if (importColumnCount > FIRST_PROJECT_COL) {
@@ -228,7 +228,7 @@ function addNewProjectColumn(project) {
     jexceltable.insertColumn(1, newColumn, false, { type: 'numerical', title: 'Project ' + (jexceltable.colgroup.length - FIRST_PROJECT_COL + 1), width: 80 });
     jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
-    projects[newColumn] = project;
+    projectsInBOMTable[newColumn] = project;
     return newColumn;
 }
 
@@ -337,7 +337,7 @@ function deleteLastColumns(n) {
 
 /* exported clearBOMTable */
 function clearBOMTable() {
-    projects = {};
+    projectsInBOMTable = {};
     if (jexceltable.options.data[0].length > FIRST_PROJECT_COL) {
         deleteLastColumns(jexceltable.options.data[0].length - FIRST_PROJECT_COL);
     }
@@ -347,9 +347,9 @@ function clearBOMTable() {
 
 function deleteProject(colnumber) {
     for (let i = colnumber + 1; i < jexceltable.options.data[0].length; i++) {
-        projects[i - 1] = projects[i];
+        projectsInBOMTable[i - 1] = projectsInBOMTable[i];
     }
-    delete projects[jexceltable.options.data[0].length];
+    delete projectsInBOMTable[jexceltable.options.data[0].length];
     jexceltable.deleteColumn(colnumber);
     document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
     jexceltable.setFooter([jexceltable.options.footers[0].slice(0, -1)]);
