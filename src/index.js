@@ -77,24 +77,14 @@ if (!('content' in document.createElement('template'))) {
     alert("Your browser does not support the necessary feature, Sorry.");
 }
 
-function load_library(err, data) {
-    let listGroup = document.getElementById('projectListGroup');
-    if (err) {
-        listGroup.replaceChildren('<div class="list-group-item">An error occured</div>');
-        return;
-    }
-    let baseLibraryPath = config.librarypath.substring(0, config.librarypath.lastIndexOf('/') + 1);
-    let nodes = document.createDocumentFragment();
+var createListGroupItemForProject = (function () {
     let template = document.getElementById('projectListGroupItemTemplate');
     let aNode = template.content.querySelector('a.list-group-item.list-group-item-action');
     let titleNode = template.content.querySelector('.projecttitle');
     let authorNode = template.content.querySelector('.projectauthor');
     let tagsNode = template.content.querySelector('.projecttags');
-    data.forEach(function (p) {
-        let project = parse_library_entry(p);
-        library.push(project);
-
-        aNode.href = "#project:" + baseLibraryPath + project.projectpath;
+    return function (project) {
+        aNode.href = project.projecturl;
         aNode.className = 'list-group-item list-group-item-action ' + Array.from(project.tags.keys(), function (tag) {
             return 'tag_class_' +  tag;
         }).join(' ');
@@ -103,8 +93,26 @@ function load_library(err, data) {
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
             return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
         }).join('');
-        nodes.appendChild(document.importNode(template.content, true));
-        project.node = nodes.lastElementChild;
+        return project.node = document.importNode(template.content, true).firstElementChild;
+    };
+})();
+
+function load_library(err, data) {
+    let listGroup = document.getElementById('projectListGroup');
+    if (err) {
+        listGroup.replaceChildren('<div class="list-group-item">An error occured</div>');
+        return;
+    }
+    let baseLibraryPath = config.librarypath.substring(0, config.librarypath.lastIndexOf('/') + 1);
+    let nodes = document.createDocumentFragment();
+
+    data.forEach(function (p) {
+        let project = parse_library_entry(p);
+        project.projecturl =  "#project:" + baseLibraryPath + project.projectpath;
+        library.push(project);
+
+        let node = createListGroupItemForProject(project);
+        nodes.appendChild(node);
     });
     listGroup.replaceChildren(nodes);
 }
