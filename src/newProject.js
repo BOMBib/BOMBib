@@ -19,12 +19,12 @@ function queueSaveLocalProjectTable() {
 
 /* exported newProjectTable */
 var newProjectTable = null;
+const NEW_PROJECT_CATEGORY_COL = 0;
+const NEW_PROJECT_VALUE_COL = 1;
+const NEW_PROJECT_SPEC_COL = 2;
+const NEW_PROJECT_NOTE_COL = 3;
+const NEW_PROJECT_QTY_COL = 4;
 function initializeNewProjectModal() {
-    const NEW_PROJECT_CATEGORY_COL = 0;
-    const NEW_PROJECT_VALUE_COL = 1;
-    const NEW_PROJECT_SPEC_COL = 2;
-    const NEW_PROJECT_NOTE_COL = 3;
-    const NEW_PROJECT_QTY_COL = 4;
     let tagDiv = document.getElementById('newProjectModalTagsDiv');
     let template = document.getElementById('newProjectModalTagElementTemplate');
     let label = template.content.querySelector('label');
@@ -81,7 +81,7 @@ function initializeNewProjectModal() {
 }
 initializeNewProjectModal();
 
-function saveLocalProjectToStorage(hash) {
+function getLocalProjectData(hash) {
     let project = {};
 
     project.title = newProjectModalElement.querySelector('#newProjectTitle').value;
@@ -105,6 +105,10 @@ function saveLocalProjectToStorage(hash) {
     });
 
     let tabledata = newProjectTable.getData().slice(0, -SPARE_ROWS);
+    return [project, tabledata];
+}
+function saveLocalProjectToStorage(hash) {
+    let [project, tabledata] = getLocalProjectData(hash);
 
     localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash, JSON.stringify(tabledata));
 
@@ -170,3 +174,39 @@ function getNewLocalProjectHash() {
     } while (localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + id) !== null);
     return id;
 }
+
+function createLibraryJSON(hash) {
+    let [project, tabledata] = getLocalProjectData(hash);
+    project.bom = [];
+    tabledata.forEach(function(item, i) {
+        let qty = Number(item[NEW_PROJECT_QTY_COL]);
+        if (qty == 0 || isNaN(qty)) {
+            return;
+        }
+        let component = {
+            qty: qty,
+        };
+        if (item[NEW_PROJECT_CATEGORY_COL]) {
+            component.type = item[NEW_PROJECT_CATEGORY_COL];
+        }
+        if (item[NEW_PROJECT_VALUE_COL]) {
+            component.value = item[NEW_PROJECT_VALUE_COL];
+        }
+        if (item[NEW_PROJECT_SPEC_COL]) {
+            component.spec = item[NEW_PROJECT_SPEC_COL];
+        }
+        if (item[NEW_PROJECT_NOTE_COL]) {
+            component.note = item[NEW_PROJECT_NOTE_COL];
+        }
+        project.bom.push(component);
+    });
+    return project;
+}
+
+document.getElementById('addLocalProjectToBomButton').addEventListener('click', function () {
+    let project = createLibraryJSON(currentlyLoadedLocalProjectHash);
+    /* global addProjectToBom */
+    addProjectToBom(project, function () {
+        newProjectModal.hide();
+    });
+});
