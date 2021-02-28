@@ -349,7 +349,7 @@ function deleteProject(colnumber) {
     for (let i = colnumber + 1; i < jexceltable.options.data[0].length; i++) {
         projectsInBOMTable[i - 1] = projectsInBOMTable[i];
     }
-    delete projectsInBOMTable[jexceltable.options.data[0].length];
+    delete projectsInBOMTable[jexceltable.options.data[0].length - 1];
     jexceltable.deleteColumn(colnumber);
     document.getElementById('spreadsheet').querySelector('tfoot').innerHTML = '';
     jexceltable.setFooter([jexceltable.options.footers[0].slice(0, -1)]);
@@ -379,7 +379,7 @@ function bomtablecontextmenu(obj, x, y) {
             items.push({
                 title: "Remove Project",
                 onclick: function () {
-                    deleteProject(y);
+                    deleteProject(parseInt(x));
                 },
             });
         }
