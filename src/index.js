@@ -283,9 +283,10 @@ function setupModalsFromHash() {
             }
             loadProject(data, projectpath);
         });
-    } else if (window.location.hash == '#newProject') {
+    } else if (window.location.hash.substr(0, 12) == '#edit:local:') {
         projectModal.hide();
-        newProjectModal.show();
+        /* global showNewProjectModal */
+        showNewProjectModal(window.location.hash.substr(12));
     } else {
         projectModal.hide();
         newProjectModal.hide();

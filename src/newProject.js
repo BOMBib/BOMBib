@@ -5,6 +5,9 @@
 var newProjectModalElement = document.getElementById('newProjectModal');
 var newProjectModal = new bootstrap.Modal(newProjectModalElement, {'backdrop': 'static', 'keyboard': false});
 
+const LOCALSTORAGE_LOCAL_PROJECT_PREFIX = 'local_bom_project_';
+var currentlyLoadedLocalProjectHash = null;
+
 /* exported newProjectTable */
 var newProjectTable = null;
 function initializeNewProjectModal() {
@@ -60,5 +63,95 @@ function initializeNewProjectModal() {
             }
         },
     });
+
+    newProjectModalElement.addEventListener('change', function () {
+        //TODO: Debounce
+        saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
+    });
+
+    newProjectTable.insertColumn(1);
 }
 initializeNewProjectModal();
+
+function saveLocalProjectToStorage(hash) {
+    let project = {};
+
+    project.title = newProjectModalElement.querySelector('#newProjectTitle').value;
+    project.description = newProjectModalElement.querySelector('#newProjectDescription').value;
+    function getPerson(idPrefix, element) {
+        let person = {};
+        person.name = element.querySelector(idPrefix + 'Name').value;
+        person.github = element.querySelector(idPrefix + 'GitHub').value;
+        person.youtube = element.querySelector(idPrefix + 'YouTube').value;
+        person.patreon = element.querySelector(idPrefix + 'Patreon').value;
+        person.web =  element.querySelector(idPrefix + 'Web').value;
+        return person;
+    }
+    project.author = getPerson('#newProjectAuthor', newProjectModalElement);
+    project.committer = getPerson('#newProjectCommitter', newProjectModalElement);
+    project.tags = {};
+    newProjectModalElement.querySelectorAll(
+        'input[type=checkbox][name=newProjectModalTagCheckbox]:checked'
+    ).forEach(function (item, i) {
+        project.tags[item.value] = true;
+    });
+
+
+    localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash, JSON.stringify(project));
+}
+
+function loadLocalProjectFromStorage(hash) {
+    currentlyLoadedLocalProjectHash = hash;
+    let project = JSON.parse(localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash));
+
+    if (!project) {
+        return;
+    }
+
+    newProjectModalElement.querySelector('#newProjectTitle').value = project.title;
+    newProjectModalElement.querySelector('#newProjectDescription').value = project.description;
+
+    function loadPerson(idPrefix, element, person) {
+        element.querySelector(idPrefix + 'Name').value = person.name || '';
+        element.querySelector(idPrefix + 'GitHub').value = person.github || '';
+        element.querySelector(idPrefix + 'YouTube').value = person.youtube || '';
+        element.querySelector(idPrefix + 'Patreon').value = person.patreon || '';
+        element.querySelector(idPrefix + 'Web').value = person.web || '';
+    }
+    loadPerson('#newProjectAuthor', newProjectModalElement, project.author || {});
+    loadPerson('#newProjectCommitter', newProjectModalElement, project.committer || {});
+
+    if (project.tags) {
+        newProjectModalElement.querySelectorAll(
+            'input[type=checkbox][name=newProjectModalTagCheckbox]'
+        ).forEach(function (item, i) {
+            item.checked = project.tags[item.value] || false;
+        });
+    }
+}
+
+/* exported showNewProjectModal */
+function showNewProjectModal(hash) {
+    loadLocalProjectFromStorage(hash);
+    newProjectModal.show();
+}
+
+// Slightly modified from: https://stackoverflow.com/a/1349426/2256700
+function createRandomString(length) {
+    var result           = [];
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+    }
+    return result.join('');
+}
+
+/* exported getNewLocalProjectHash */
+function getNewLocalProjectHash() {
+    let id;
+    do {
+        id = createRandomString(32);
+    } while (localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + id) !== null);
+    return id;
+}
