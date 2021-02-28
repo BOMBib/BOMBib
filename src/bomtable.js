@@ -55,10 +55,8 @@ var projects = {};
 
 function queueSave() {
     if (currentylLoading) return;
-    if (saveToLocalStorageTimeout) {
-        clearTimeout(saveToLocalStorageTimeout);
-    }
-    saveToLocalStorageTimeout = setTimeout(saveToLocalStorage, 100);
+    /* global debounceUtil */
+    debounceUtil('saveBomTableToLocalStorage', 200, 1000, saveToLocalStorage);
 }
 
 /* exported jexceltable */
@@ -169,7 +167,7 @@ function setDependencies(instance, c, r) {
 }
 
 var currentylLoading = true;
-var saveToLocalStorageTimeout = null;
+
 const LOCAL_STROAGE_KEY = 'bom_table_data';
 const channel = new BroadcastChannel('BOMBib-channel');
 channel.onmessage = function (evt) {
@@ -179,7 +177,6 @@ channel.onmessage = function (evt) {
 };
 function saveToLocalStorage() {
     if (currentylLoading) return;
-    saveToLocalStorageTimeout = null;
     let tabledata = jexceltable.getData().slice(0, -SPARE_ROWS);
     let data = {
         "projects": projects,

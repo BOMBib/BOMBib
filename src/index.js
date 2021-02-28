@@ -359,15 +359,36 @@ function refilterLibraryListGroup() {
     listGroup.replaceChildren(fragment);
 }
 
+var debounceUtil = (function () {
+    var timeoutsPerKey = {};
+    var maxTimeoutsPerKey = {};
+    return function (key, timeout, maxtimeout, f) {
+        if (timeoutsPerKey[key]) {
+            clearTimeout(timeoutsPerKey[key]);
+        }
+        if (maxtimeout > 0 && !maxTimeoutsPerKey[key]) {
+            maxTimeoutsPerKey[key] = setTimeout(function () {
+                maxTimeoutsPerKey[key] = null;
+                if (timeoutsPerKey[key]) {
+                    clearTimeout(timeoutsPerKey[key]);
+                    timeoutsPerKey[key] = null;
+                }
+                f();
+            }, maxtimeout);
+        }
+        timeoutsPerKey[key] = setTimeout(function () {
+            timeoutsPerKey[key] = null;
+            if (maxTimeoutsPerKey[key]) {
+                clearTimeout(maxTimeoutsPerKey[key]);
+                maxTimeoutsPerKey[key] = null;
+            }
+            f();
+        }, timeout);
+    };
+})();
+
 document.getElementById('libraryTagFilterDiv').addEventListener('change', refilterLibraryListGroup);
 
-var searchInputFilterTimeout = null;
 document.getElementById('searchProjectInput').addEventListener('input', function () {
-    if (searchInputFilterTimeout) {
-        clearTimeout(searchInputFilterTimeout);
-    }
-    searchInputFilterTimeout = setTimeout(function () {
-        searchInputFilterTimeout = null;
-        refilterLibraryListGroup();
-    }, 200);
+    debounceUtil('refilterLibraryListGroup', 100, 500, refilterLibraryListGroup);
 });

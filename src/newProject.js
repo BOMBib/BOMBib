@@ -65,8 +65,10 @@ function initializeNewProjectModal() {
     });
 
     newProjectModalElement.addEventListener('change', function () {
-        //TODO: Debounce
-        saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
+        /* global debounceUtil */
+        debounceUtil('saveLocalProjectToStorage', 500, 1000, function () {
+            saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
+        });
     });
 
     newProjectTable.insertColumn(1);
