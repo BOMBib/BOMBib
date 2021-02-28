@@ -169,10 +169,8 @@ new bootstrap.Popover(projectModalElement.querySelector('.projectauthor'));
 new bootstrap.Popover(projectModalElement.querySelector('.projectcommitter'));
 
 var currentlyLoadedProject = null;
-function loadProject(project, projectpath) {
+function loadProjectIntoModal(project) {
     project = parse_tags(project);
-    project.projectpath = projectpath;
-    //TODO Validate Project Schema
     currentlyLoadedProject = project;
     projectModalElement.querySelectorAll('[role=status]').forEach(e => e.style.display = 'none');
     projectModalElement.querySelector('#addProjectToBomButton').disabled = false;
@@ -326,8 +324,17 @@ function setupModalsFromHash() {
                 alert("Could not load data");
                 return;
             }
-            loadProject(data, projectpath);
+            let project = data;
+            project.projectpath = projectpath;
+            //TODO Validate Project Schema
+            loadProjectIntoModal(project);
         });
+    } else if (window.location.hash.match(/^#project:bom:\d+$/)) {
+        newProjectModal.hide();
+        let col = Number(window.location.hash.substr(13));
+        /* global projectsInBOMTable */
+        loadProjectIntoModal(projectsInBOMTable[col]);
+        projectModal.show();
     } else if (window.location.hash.substr(0, 12) == '#edit:local:') {
         projectModal.hide();
         /* global showNewProjectModal */

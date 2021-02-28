@@ -97,7 +97,7 @@ var jexceltable = jexcel(document.getElementById('spreadsheet'), {
                 if (projectsInBOMTable[c]) {
                     let project = projectsInBOMTable[c];
                     cell.classList.add('readonly');
-                    cell.innerHTML = '<a href="#project:' + project.projectpath + '">' + project.title + '</a>';
+                    cell.innerHTML = '<a href="#project:bom:' + c + '">' + (project.title ? project.title : '<i>No title</i>') + '</a>';
                 }
             }
         }
