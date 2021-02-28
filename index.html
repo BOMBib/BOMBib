@@ -126,11 +126,14 @@
                                 <span><a onclick="window.location.hash='#edit:local:' + getNewLocalProjectHash()" class="btn btn-info btn-sm" role="button"><i class="bi bi-journal-plus"></i> New Project</a></span>
                             </div>
                             <div class="list-group" id="projectListGroup">
-                                <div class="list-group-item"><div class="d-flex justify-content-center">
-                                    <div class="spinner-border" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div></div>
-                                </div>
+                                <div class="list-group-item" id="localProjectLibraryLoadingIndicator"><div class="d-flex justify-content-center">
+                                    Loading local project library...
+                                    <div class="ms-3 spinner-border" role="status"></div>
+                                </div></div>
+                                <div class="list-group-item" id="externalProjectLibraryLoadingIndicator"><div class="d-flex justify-content-center">
+                                    Loading external project library...
+                                    <div class="ms-3 spinner-border" role="status"></div>
+                                </div></div>
                                 <template id="projectListGroupItemTemplate">
                                     <a class="list-group-item list-group-item-action" href="#">
                                         <div class="d-flex w-100 justify-content-between">
