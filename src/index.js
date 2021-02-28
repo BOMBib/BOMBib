@@ -268,7 +268,7 @@ triggerTabList.forEach(function (triggerEl) {
         tabTrigger.show();
     });
 });
-function loadProjectFromHash() {
+function setupModalsFromHash() {
     /* global newProjectModal */
     if (window.location.hash.substr(0, 11) == '#project:./' || window.location.hash.substr(0, 12) == '#project:../') {
         newProjectModal.hide();
@@ -293,8 +293,8 @@ function loadProjectFromHash() {
         switchTab(window.location.hash);
     }
 }
-window.addEventListener("hashchange", loadProjectFromHash, false);
-loadProjectFromHash();
+window.addEventListener("hashchange", setupModalsFromHash, false);
+setupModalsFromHash();
 function restoreHashAfterModalClose() {
     if (document.getElementById('intro-tab-pane').classList.contains('active')) {
         window.location.hash = '#intro';
