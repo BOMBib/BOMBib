@@ -83,12 +83,22 @@ var createListGroupItemForProject = (function () {
     let titleNode = template.content.querySelector('.projecttitle');
     let authorNode = template.content.querySelector('.projectauthor');
     let tagsNode = template.content.querySelector('.projecttags');
+    let projectLocationIconNode = template.content.querySelector('.projectlocationicon');
     return function (project) {
         aNode.href = project.projecturl;
         aNode.className = 'list-group-item list-group-item-action ' + Array.from(project.tags.keys(), function (tag) {
             return 'tag_class_' +  tag;
         }).join(' ');
-        titleNode.innerText = project.title;
+        if (project.title) {
+            titleNode.innerText = project.title;
+        } else {
+            titleNode.innerHTML = '<i>No title</i>';
+        }
+        if (project.local) {
+            projectLocationIconNode.innerHTML = '<i class="bi bi-journal"></i>';
+        } else {
+            projectLocationIconNode.innerHTML = '<i class="bi bi-globe"></i>';
+        }
         authorNode.innerText = project.author ? project.author.name : '';
         tagsNode.innerHTML = Array.from(project.tags.keys(), function (tag) {
             return '<span class="badge bg-info text-dark me-1">' + tag + '</span>';
@@ -110,6 +120,7 @@ function load_local_library() {
                 project.tags.add(key);
             }
             project.projecturl = '#edit:local:' + key.substr(LOCALSTORAGE_LOCAL_PROJECT_PREFIX.length);
+            project.local = true;
             library.push(project);
 
             let node = createListGroupItemForProject(project);
