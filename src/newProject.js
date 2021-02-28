@@ -1,12 +1,21 @@
 /* eslint-env browser */
 /* global bootstrap, config, jexcel */
+/* global SPARE_ROWS */
 
 /* exported newProjectModalElement, newProjectModal, */
 var newProjectModalElement = document.getElementById('newProjectModal');
 var newProjectModal = new bootstrap.Modal(newProjectModalElement, {'backdrop': 'static', 'keyboard': false});
 
-const LOCALSTORAGE_LOCAL_PROJECT_PREFIX = 'local_bom_project_';
+const LOCALSTORAGE_LOCAL_PROJECT_PREFIX = 'local_project_meta_';
+const LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX = 'local_project_bom_';
 var currentlyLoadedLocalProjectHash = null;
+
+function queueSaveLocalProjectTable() {
+    /* global debounceUtil */
+    debounceUtil('saveLocalProjectToStorage', 500, 1000, function () {
+        saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
+    });
+}
 
 /* exported newProjectTable */
 var newProjectTable = null;
@@ -32,13 +41,15 @@ function initializeNewProjectModal() {
 
     newProjectTable = jexcel(document.getElementById('newProjectSpreadsheet'), {
         data: [[]],
-        minSpareRows: 3,
+        minSpareRows: SPARE_ROWS,
         columnSorting: false,
         defaultColWidth: 80,
         allowManualInsertColumn: false,
         tableOverflow: true,
         freezeColumns: 5,
         tableHeight: '600px',
+        onafterchanges: queueSaveLocalProjectTable,
+        onmoverow: queueSaveLocalProjectTable,
         columns: [
             { type: 'dropdown', title: 'Part Category', width: 80, source: [''].concat(config.categorys) },
             { type: 'text', title: 'Value', width: 80 },
@@ -64,12 +75,7 @@ function initializeNewProjectModal() {
         },
     });
 
-    newProjectModalElement.addEventListener('change', function () {
-        /* global debounceUtil */
-        debounceUtil('saveLocalProjectToStorage', 500, 1000, function () {
-            saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
-        });
-    });
+    newProjectModalElement.addEventListener('change', queueSaveLocalProjectTable);
 
     newProjectTable.insertColumn(1);
 }
@@ -98,6 +104,9 @@ function saveLocalProjectToStorage(hash) {
         project.tags[item.value] = true;
     });
 
+    let tabledata = newProjectTable.getData().slice(0, -SPARE_ROWS);
+
+    localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash, JSON.stringify(tabledata));
 
     localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash, JSON.stringify(project));
 }
@@ -129,6 +138,10 @@ function loadLocalProjectFromStorage(hash) {
         ).forEach(function (item, i) {
             item.checked = project.tags[item.value] || false;
         });
+    }
+    let tabledata = JSON.parse(localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash));
+    if (tabledata) {
+        newProjectTable.setData(tabledata);
     }
 }
 
