@@ -203,6 +203,17 @@ function createLibraryJSON(hash) {
     return project;
 }
 
+function deleteLocalProject(hash) {
+    localStorage.removeItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash);
+    localStorage.removeItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash);
+}
+document.getElementById('deleteLocalProjectButton').addEventListener('click', function () {
+    if (confirm("Really delete this local project?")) {
+        deleteLocalProject(currentlyLoadedLocalProjectHash);
+        newProjectModal.hide();
+    }
+});
+
 document.getElementById('addLocalProjectToBomButton').addEventListener('click', function () {
     let project = createLibraryJSON(currentlyLoadedLocalProjectHash);
     /* global addProjectToBom */
