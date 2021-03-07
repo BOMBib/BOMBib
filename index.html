@@ -236,6 +236,10 @@
                         <li class="nav-item" role="presentation">
                             <button class="nav-link bg-transparent" id="newProjectBOMTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectBOMTab" type="button" role="tab" aria-controls="newProjectBOMTab" aria-selected="false">BOM</button>
                         </li>
+                        <li class="flex-grow-1"></li>
+                        <li class="nav-item me-3" role="presentation">
+                            <button class="nav-link bg-transparent text-primary" id="newProjectExportTab-tab" data-bs-toggle="tab" data-bs-target="#newProjectExportTab" type="button" role="tab" aria-controls="newProjectExportTab" aria-selected="false">Export</button>
+                        </li>
                     </ul>
                     <div class="modal-body">
                         <div class="tab-content">
@@ -307,6 +311,13 @@
                                 <div id="newProjectSpreadsheet">
                                 </div>
                                 <span class="form-text">If you added this project to your BOM the changes here will not be reflected in the BOM automatically. Readd the project to your BOM to get the latest version.</span>
+                            </div>
+                            <div class="tab-pane" id="newProjectExportTab" role="tabpanel" aria-labelledby="newProjectExportTab-tab">
+                                <p>
+                                    For now there is no automatic exporting available, sorry.
+                                    You have to create a pull request for <a href="https://github.com/BOMBib/library" target="_blank">this GitHub repository</a> with a file named <code>bomproject.json</code> containing this json:
+                                </p>
+                                <textarea readonly="readonly" class="form-control" id="newProjectExportJsonTextarea" rows="20"></textarea>
                             </div>
                         </div>
                         <script type="text/javascript">

@@ -177,6 +177,10 @@ function getNewLocalProjectHash() {
 
 function createLibraryJSON(hash) {
     let [project, tabledata] = getLocalProjectData(hash);
+    project.title += ' ' + Object.keys(project.tags).map(function (tag) {
+        return '[' + tag + ']';
+    }).join('');
+    delete project.tags;
     project.bom = [];
     tabledata.forEach(function(item, i) {
         let qty = Number(item[NEW_PROJECT_QTY_COL]);
@@ -220,4 +224,9 @@ document.getElementById('addLocalProjectToBomButton').addEventListener('click', 
     addProjectToBom(project, function () {
         newProjectModal.hide();
     });
+});
+
+document.getElementById('newProjectExportTab-tab').addEventListener('show.bs.tab', function () {
+    let textarea = document.getElementById('newProjectExportJsonTextarea');
+    textarea.value = JSON.stringify(createLibraryJSON(currentlyLoadedLocalProjectHash), null, '\t');
 });
