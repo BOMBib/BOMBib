@@ -1,6 +1,7 @@
 /* eslint-env browser */
 /* global bootstrap, config, jexcel */
 /* global SPARE_ROWS */
+/* global load_local_library */
 
 /* exported newProjectModalElement, newProjectModal, */
 var newProjectModalElement = document.getElementById('newProjectModal');
@@ -113,6 +114,8 @@ function saveLocalProjectToStorage(hash) {
     localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash, JSON.stringify(tabledata));
 
     localStorage.setItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash, JSON.stringify(project));
+
+    load_local_library();
 }
 
 function loadLocalProjectFromStorage(hash) {
@@ -212,6 +215,7 @@ function createLibraryJSON(hash) {
 function deleteLocalProject(hash) {
     localStorage.removeItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash);
     localStorage.removeItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash);
+    load_local_library();
 }
 document.getElementById('deleteLocalProjectButton').addEventListener('click', function () {
     if (confirm("Really delete this local project?")) {

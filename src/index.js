@@ -107,7 +107,7 @@ var createListGroupItemForProject = (function () {
     };
 })();
 
-function load_local_library() {
+function load_local_library(firstLoad = false) {
     let library = [];
     let nodes = document.createDocumentFragment();
     for (let i = 0; i < localStorage.length; i++) {
@@ -128,12 +128,16 @@ function load_local_library() {
             nodes.appendChild(node);
         }
     }
-    let listGroup = document.getElementById('projectListGroup');
-    let loadingElement = document.getElementById('localProjectLibraryLoadingIndicator');
-    listGroup.replaceChild(nodes, loadingElement);
     libraries.set('local', library);
+    if (firstLoad) {
+        let listGroup = document.getElementById('projectListGroup');
+        let loadingElement = document.getElementById('localProjectLibraryLoadingIndicator');
+        listGroup.replaceChild(nodes, loadingElement);
+    } else {
+        refilterLibraryListGroup();
+    }
 }
-load_local_library();
+load_local_library(true);
 
 function load_library(err, data) {
     let listGroup = document.getElementById('projectListGroup');
