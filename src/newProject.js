@@ -224,6 +224,13 @@ document.getElementById('deleteLocalProjectButton').addEventListener('click', fu
     }
 });
 
+document.getElementById('saveLocalProjectCopy').addEventListener('click', function () {
+    let newhash = getNewLocalProjectHash();
+    saveLocalProjectToStorage(newhash);
+    currentlyLoadedLocalProjectHash = newhash;
+    window.location.hash = '#edit:local:' + newhash;
+});
+
 document.getElementById('addLocalProjectToBomButton').addEventListener('click', function () {
     let project = createLibraryJSON(currentlyLoadedLocalProjectHash);
     /* global addProjectToBom */
