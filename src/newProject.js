@@ -145,6 +145,10 @@ function loadLocalProjectFromStorage(hash) {
     }
     let tabledata = JSON.parse(localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash));
     if (tabledata) {
+        if (tabledata.length == 0) {
+            //Add empty row to fix Spare rows not being shown, when there is no data.
+            tabledata.push([]);
+        }
         newProjectTable.setData(tabledata);
     }
 }
