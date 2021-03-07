@@ -120,11 +120,11 @@ function loadLocalProjectFromStorage(hash) {
     let project = JSON.parse(localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_PREFIX + hash));
 
     if (!project) {
-        return;
+        project = {};
     }
 
-    newProjectModalElement.querySelector('#newProjectTitle').value = project.title;
-    newProjectModalElement.querySelector('#newProjectDescription').value = project.description;
+    newProjectModalElement.querySelector('#newProjectTitle').value = project.title || '';
+    newProjectModalElement.querySelector('#newProjectDescription').value = project.description || '';
 
     function loadPerson(idPrefix, element, person) {
         element.querySelector(idPrefix + 'Name').value = person.name || '';
@@ -144,13 +144,11 @@ function loadLocalProjectFromStorage(hash) {
         });
     }
     let tabledata = JSON.parse(localStorage.getItem(LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX + hash));
-    if (tabledata) {
-        if (tabledata.length == 0) {
-            //Add empty row to fix Spare rows not being shown, when there is no data.
-            tabledata.push([]);
-        }
-        newProjectTable.setData(tabledata);
+    if (!tabledata || tabledata.length == 0) {
+        //Add empty row to fix Spare rows not being shown, when there is no data.
+        tabledata = [[]];
     }
+    newProjectTable.setData(tabledata);
 }
 
 /* exported showNewProjectModal */
