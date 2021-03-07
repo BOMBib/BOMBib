@@ -11,9 +11,9 @@ const LOCALSTORAGE_LOCAL_PROJECT_PREFIX = 'local_project_meta_';
 const LOCALSTORAGE_LOCAL_PROJECT_BOM_PREFIX = 'local_project_bom_';
 var currentlyLoadedLocalProjectHash = null;
 
-function queueSaveLocalProjectTable() {
+function queueSaveLocalProjectTable(instant = false) {
     /* global debounceUtil */
-    debounceUtil('saveLocalProjectToStorage', 500, 1000, function () {
+    debounceUtil('saveLocalProjectToStorage', instant ? 1 : 500, 1000, function () {
         saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
     });
 }
@@ -242,4 +242,8 @@ document.getElementById('addLocalProjectToBomButton').addEventListener('click', 
 document.getElementById('newProjectExportTab-tab').addEventListener('show.bs.tab', function () {
     let textarea = document.getElementById('newProjectExportJsonTextarea');
     textarea.value = JSON.stringify(createLibraryJSON(currentlyLoadedLocalProjectHash), null, '\t');
+});
+
+newProjectModalElement.addEventListener('hide.bs.modal', function () {
+    queueSaveLocalProjectTable(true);
 });
