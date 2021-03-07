@@ -14,6 +14,7 @@ var currentlyLoadedLocalProjectHash = null;
 function queueSaveLocalProjectTable(instant = false) {
     /* global debounceUtil */
     debounceUtil('saveLocalProjectToStorage', instant ? 1 : 500, 1000, function () {
+        if (!currentlyLoadedLocalProjectHash) return;
         saveLocalProjectToStorage(currentlyLoadedLocalProjectHash);
     });
 }
@@ -220,6 +221,7 @@ function deleteLocalProject(hash) {
 document.getElementById('deleteLocalProjectButton').addEventListener('click', function () {
     if (confirm("Really delete this local project?")) {
         deleteLocalProject(currentlyLoadedLocalProjectHash);
+        currentlyLoadedLocalProjectHash = null;
         newProjectModal.hide();
     }
 });
@@ -245,5 +247,6 @@ document.getElementById('newProjectExportTab-tab').addEventListener('show.bs.tab
 });
 
 newProjectModalElement.addEventListener('hide.bs.modal', function () {
+    if (!currentlyLoadedLocalProjectHash) return;
     queueSaveLocalProjectTable(true);
 });
