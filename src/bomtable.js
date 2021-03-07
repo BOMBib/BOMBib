@@ -229,6 +229,9 @@ function addNewProjectColumn(project) {
     jexceltable.setValueFromCoords(newColumn, PROJECT_COUNT_ROW, 1); //Set count for new Project
     jexceltable.options.footers[0][newColumn] = PROJECT_FOOTER_FORMULA;
     projectsInBOMTable[newColumn] = project;
+    for (let i = 0; i < jexceltable.options.data.length - SPARE_ROWS; i++) {
+        jexceltable.updateCell(PART_COUNT_COLUMN, i, jexceltable.options.data[i][PART_COUNT_COLUMN], true);
+    }
     return newColumn;
 }
 
