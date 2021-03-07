@@ -55,7 +55,7 @@ window.addEventListener("load", function () {
 
 var tagRegex = RegExp('\\[(' + config.projecttags.join('|') + ')\\]', 'g');
 
-var library = [];
+var libraries = new Map();
 function parse_library_entry(p) {
     let project = {};
     project.title = p.t;
@@ -108,6 +108,7 @@ var createListGroupItemForProject = (function () {
 })();
 
 function load_local_library() {
+    let library = [];
     let nodes = document.createDocumentFragment();
     for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
@@ -130,6 +131,7 @@ function load_local_library() {
     let listGroup = document.getElementById('projectListGroup');
     let loadingElement = document.getElementById('localProjectLibraryLoadingIndicator');
     listGroup.replaceChild(nodes, loadingElement);
+    libraries.set('local', library);
 }
 load_local_library();
 
@@ -142,6 +144,8 @@ function load_library(err, data) {
     let baseLibraryPath = config.librarypath.substring(0, config.librarypath.lastIndexOf('/') + 1);
     let nodes = document.createDocumentFragment();
 
+    let library = [];
+
     data.forEach(function (p) {
         let project = parse_library_entry(p);
         project.projecturl =  "#project:" + baseLibraryPath + project.projectpath;
@@ -150,6 +154,9 @@ function load_library(err, data) {
         let node = createListGroupItemForProject(project);
         nodes.appendChild(node);
     });
+
+    libraries.set('github', library);
+
     let loadingElement = document.getElementById('externalProjectLibraryLoadingIndicator');
     listGroup.replaceChild(nodes, loadingElement);
 }
@@ -371,7 +378,8 @@ function escapeRegExp(string) {
 function refilterLibraryListGroup() {
     let tagDiv = document.getElementById('libraryTagFilterDiv');
 
-    let projects = library;
+    // Combine all libraries into one.
+    let projects = [].concat.apply([], Array.from(libraries.values()));
 
 
     let searchtext = document.getElementById('searchProjectInput').value;
